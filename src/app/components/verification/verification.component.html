@@ -1,0 +1,57 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<header class="animate__animated animate__fadeInDown delay-1m">
+  <div class="wrap" [ngClass]="{ hide: !success }">
+    <a routerLink="/register"> <img src="assets/img/svg/arrow-bck_.svg" /> Back</a>
+  </div>
+</header>
+
+<main class="main">
+  <section class="otp">
+    <div class="wrap animate__animated  animate__fadeIn delay-1m" [ngClass]="{ hide: !success }">
+      <a class="logo animate__animated  animate__fadeInUp delay-2m" routerLink="/">
+        <img src="assets/images/logo/logo.png" class="img-fluid mb-4" style="width: 50%;" alt="logo" />
+      </a>
+
+      <h2 class="animate__animated animate__fadeInUp delay-3m">Token Verification</h2>
+      <p class="info_ animate__animated  animate__fadeInUp delay-4m">
+        A one time token has been sent to your email address, please check and verify.
+      </p>
+
+      <form [formGroup]="verificationForm" (ngSubmit)="onVerify()">
+        <div class="input bordered otp" [ngClass]="{ error: submitted && f.token.errors }">
+          <label>Verification Code</label>
+          <input
+            type="number"
+            (keyup)="onKey($event)"
+            [ngClass]="{ valid: valid }"
+            (keypress)="onkeyPress($event)"
+            formControlName="token"
+          />
+
+          <span class="tag" [ngClass]="{ valid: valid }"><img src="assets/img/svg/verif.svg"/></span>
+
+          <span class="tag_ animate__animated  animate__fadeIn" *ngIf="valid" [ngClass]="{ valid: valid }"
+            ><img src="assets/img/svg/checkmark_green.svg"
+          /></span>
+
+          <div *ngIf="submitted && f.token.errors" class="invalid-feedback">
+            <div *ngIf="f.token.errors.required">Please enter the verification code you received.</div>
+          </div>
+        </div>
+
+        <div class="action d-flex align-items-center">
+          <p>Didn’t get verification code? <a (click)="resendVerificationOtp()">Resend</a></p>
+          <button type="submit" class="btn btn-primary_" [disabled]="submitting">Verify</button>
+        </div>
+      </form>
+    </div>
+
+    <div class="sucess animate__animated  animate__fadeInDown delay-1m" [ngClass]="{ hide: success }">
+      <img src="assets/images/success.svg" alt="" />
+      <h2>Verification Successful</h2>
+      <p>Congratulation {{ fullname }}. Your Account is now active Please click on the link below to login</p>
+      <a routerLink="/dashboard">Continue to Dashboard <ion-icon src="assets/img/svg/arrow-right.svg"> </ion-icon></a>
+    </div>
+  </section>
+</main>

@@ -1,0 +1,148 @@
+<main class="users">
+    <app-sidebar [showMenu]="valueFromHeader"></app-sidebar>
+    <div class="wrapper" [ngClass]="{ full: valueFromHeader }">
+        <app-header (outputToParent)="getValue($event)"></app-header>
+        <div class="content">
+            <app-page-title></app-page-title>
+            <section class="transaction-history">
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>*</th>
+                                <th>Card</th>
+                                <th>Value</th>
+                                <th>Amount</th>
+                                <th>Status</th>
+                                <th>Date Performed</th>
+                                <th>Date Completed</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of transactions" (click)="gotoDetails(item)" style="cursor: pointer;">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <span class="completed">
+                                            <ion-icon src="assets/img/svg/arrow-up-right.svg"></ion-icon>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {{ item.card }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {{ item.card_value }}
+                                    </div>
+                                </td>
+                                <td class="green">
+                                    <div class="d-flex align-items-center">
+                                        {{ item.amount | currency: 'NGN':'code' }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <small class="completed" *ngIf="item.status === 'paid'">Completed</small>
+                                        <small class="completed" *ngIf="item.status === 'approved'">Approved</small>
+                                        <small class="pending" *ngIf="item.status === 'pending'">Pending</small>
+                                        <small class="failed" *ngIf="item.status === 'declined'">Failed</small>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {{ getFormattedDate(item.created_at) }}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {{ getFormattedDate(item.updated_at) }}
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- <div class="d-flex flex-row justify-content-center">
+                        <nav>
+                            <ul class="pagination">
+                                <li class="page-item prv">
+                                    <a class="page-lynk" [ngClass]="{ disabled: !transactions.hasPreviousPage }">
+                                        <span class="prev">
+                                            <ion-icon name="chevron-back"></ion-icon>
+                                        </span>Previous</a>
+                                </li>
+                                <li class="page-item" *ngFor="let item of totalPages; let i = index">
+                                    <a class="page-link" [ngClass]="{ active: transactions.pageIndex === i }">{{ i + 1
+                                        }}</a>
+                                </li>
+                                <li class="page-item nxt">
+                                    <a class="page-lynk" [ngClass]="{ disabled: !transactions.hasNextPage }">Next
+                                        <span class="next">
+                                            <ion-icon name="chevron-forward"></ion-icon>
+                                        </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div> -->
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="viewDetailsModal" tabindex="-1" role="dialog" aria-labelledby="viewDetailsModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Transaction Details</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body scrollable">
+                    <div *ngIf="selectedTransaction.paymentReceipt?.length" class="mb-3">
+                        <p style="font-weight: 900;">Payment Receipt: </p>
+                        <pinch-zoom>
+                            <img src={{selectedTransaction.paymentReceipt}} />
+                        </pinch-zoom>
+                    </div>
+
+                    <div *ngIf="selectedTransaction.card_image?.length">
+                        <p style="font-weight: 900;">Card Image(s): </p>
+                    
+                        <div *ngFor="let image of selectedTransaction.card_image">
+                            <pinch-zoom>
+                                <img src={{image}} />
+                            </pinch-zoom>
+                        </div>
+                    </div>
+    
+                    <div *ngIf="selectedTransaction.card_digits?.length" class="mt-3">
+                        <pre><span style="font-weight: 900;">Card Digits:</span> <br />{{ selectedTransaction.card_digits }}</pre>
+                    </div>
+    
+                    <div *ngIf="selectedTransaction.card_receipt_type?.length">
+                        <p><span style="font-weight: 900;">Card Receipt Type:</span> {{
+                            selectedTransaction.card_receipt_type }}</p>
+                    </div>
+    
+                    <div *ngIf="selectedTransaction.card_receipt?.length">
+                        <p style="font-weight: 900;">Card Receipt: </p>
+                        <pinch-zoom>
+                            <img src={{selectedTransaction.card_receipt}} />
+                        </pinch-zoom>
+                    </div>
+                </div>
+    
+                <!-- <div class="modal-footer">
+                                        <button type="button" class="btn btn-success" (click)="declineCardTransaction()">Decline</button>
+                                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                    </div> -->
+            </div>
+        </div>
+    </div>
+</main>

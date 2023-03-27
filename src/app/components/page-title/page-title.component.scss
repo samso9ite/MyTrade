@@ -1,0 +1,7 @@
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+.title h3 {
+  font-size: 24px;
+  color: $black;
+  @include bold-font;
+}

@@ -1,0 +1,19 @@
+<router-outlet></router-outlet>
+
+<ng-template #pinsetup>
+  <div class="modal-body text-center">
+    <div class="bloc">
+      <div class="tier_one" [ngClass]="{ show: showSetup }">
+        <img src="assets/img/svg/pin-lock.svg" alt="" />
+        <p class="mt-5" style="font-size: large;">
+          We need More Information
+          <span
+            >We need you to add setup your bank account, to enable transactions. Go to manage bank accounts section,
+            under settings.</span
+          >
+        </p>
+        <button class="btn btn-primary_" (click)="linkAccount()">Go to settings</button>
+      </div>
+    </div>
+  </div>
+</ng-template>

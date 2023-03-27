@@ -1,0 +1,446 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<div class="cards container-fluid">
+  <div class="tables">
+    <div class="header">
+      <h3>Cards</h3>
+      <button
+        type="button"
+        class="btn btn-sm"
+        data-toggle="modal"
+        data-target="#createCardModal"
+        (click)="onCreateCard()"
+        style="background-color: #142328; color: white; padding: 0px 10px !important"
+      >
+        Create Card
+      </button>
+    </div>
+
+    <ngx-datatable
+      class="material expandable"
+      [rows]="allCards"
+      [columnMode]="ColumnMode.force"
+      [headerHeight]="50"
+      [footerHeight]="50"
+      rowHeight="auto"
+      [limit]="10"
+      [scrollbarH]="true"
+    >
+      <ngx-datatable-column name="Name">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          <span>Name</span>
+        </ng-template>
+
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div>{{ row.name }}</div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Status">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          <span>Status</span>
+        </ng-template>
+
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div style="text-transform: capitalize;">{{ row.status }}</div>
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Cards">
+        <ng-template let-column="column" ngx-datatable-header-template>
+          <span>Actions</span>
+        </ng-template>
+
+        <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button title="Edit Card" class="btn btn-outline-success btn-actions" (click)="onEditCard(row)">
+              <i class="fas fa-edit"></i>
+            </button>
+
+            <button
+              *ngIf="row.status === 'Available'"
+              title="Pause Card Sales"
+              class="btn btn-outline-info btn-actions"
+              (click)="freezeCardSales(row.name, row._id)"
+            >
+              <i class="fas fa-pause-circle"></i>
+            </button>
+
+            <button
+              *ngIf="row.status !== 'Available'"
+              title="Resume Card Sales"
+              class="btn btn-outline-info btn-actions"
+              (click)="resumeCardSales(row.name, row._id)"
+            >
+              <i class="fas fa-play-circle"></i>
+            </button>
+
+            <button title="Add Rates To Card" class="btn btn-outline-dark btn-actions" (click)="onAddRatingToCard(row)">
+              <i class="fas fa-puzzle-piece"></i>
+            </button>
+
+            <button
+              title="Delete Store Category"
+              class="btn btn-outline-danger btn-actions"
+              (click)="deleteCard(row._id)"
+            >
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+
+  <!-- Create Card Modal -->
+  <div class="modal fade" id="createCardModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{ editting ? 'Edit' : 'Create' }} Card</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form role="form" (ngSubmit)="editting ? editCard() : createCard()" [formGroup]="createCardForm">
+            <div class="form-group">
+              <label for="name">Name of Card</label>
+              <input
+                type="text"
+                [ngClass]="{ 'is-invalid': submitted && f.name.errors }"
+                class="form-control"
+                formControlName="name"
+                id="name"
+              />
+
+              <div *ngIf="submitted && f.name.errors" class="invalid-feedback">
+                <div *ngIf="f.name.errors.required">
+                  Name is required
+                </div>
+              </div>
+            </div>
+
+            <div class="customClass" style="margin-bottom: 20px; margin-top: 10px;">
+              <image-upload
+                [clearButtonCaption]="'Delete'"
+                [extensions]="['jpg', 'png']"
+                [url]="'https://api.imgur.com/3/image'"
+                [maxFileSize]="1048576"
+                [headers]="{ Authorization: 'Client-ID 96a699465410ec7' }"
+                (uploadFinished)="onUploadCardFinished($event)"
+                [max]="1"
+                [buttonCaption]="'Upload Card Image'"
+                [dropBoxMessage]="'Drop Card Image Here'"
+                (removed)="onRemoveCardImage()"
+              >
+              </image-upload>
+            </div>
+
+            <button type="submit" class="btn btn-primary submit-btn" style="background-color: #142328; color: white;">
+              Save changes
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- All Ratings Modal -->
+  <div class="modal fade" id="allRatesModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">{{ selectedCard.name }} Rates</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="text-center" *ngIf="!selectedCard.rates.length">
+            <p style="font-size: large;">
+              There are no ratings for this card at the moment.
+            </p>
+          </div>
+
+          <div *ngIf="selectedCard.rates.length" style="max-height: 400px; overflow-y: scroll;">
+            <ngx-datatable
+              class="material expandable"
+              [rows]="selectedCard.rates"
+              [columnMode]="ColumnMode.force"
+              [headerHeight]="50"
+              [footerHeight]="50"
+              rowHeight="auto"
+              [limit]="10"
+              [scrollbarH]="true"
+            >
+              <ngx-datatable-column name="Country">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Country</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div>{{ row.country }}</div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Type">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Type</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div>{{ row.cardType }}</div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Denomination">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Denomination</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div>{{ row.denomination }}</div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Rate">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Rate</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div>{{ row.rate }}</div>
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Rates">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                  <span>Actions</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div class="btn-group" role="group" aria-label="Basic example">
+                    <button title="Edit Card" class="btn btn-outline-success btn-actions" (click)="onEditCardRate(row)">
+                      <i class="fas fa-edit"></i>
+                    </button>
+
+                    <button
+                      *ngIf="row.isDisabled"
+                      title="Enable Rates"
+                      class="btn btn-outline-dark btn-actions"
+                      (click)="toggleCardRateSales(row._id, 'Enable')"
+                    >
+                      <span>
+                        <img src="assets/img/png/power-on.png" alt="Enable Rate Sales" />
+                      </span>
+                    </button>
+
+                    <button
+                      *ngIf="!row.isDisabled"
+                      title="Disable Rates"
+                      class="btn btn-outline-dark btn-actions"
+                      (click)="toggleCardRateSales(row._id, 'Disable')"
+                    >
+                      <span>
+                        <img src="assets/img/png/power-off.png" alt="Enable Rate Sales" />
+                      </span>
+                    </button>
+
+                    <button
+                      title="Delete Store Category"
+                      class="btn btn-outline-danger btn-actions"
+                      (click)="deleteCardRate(row._id)"
+                    >
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+
+          <button
+            type="button"
+            (click)="addNewRate()"
+            class="btn btn-primary submit-btn"
+            style="background-color: #142328; color: white;"
+          >
+            Add New Rate
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Add Rating To Card Modal -->
+  <div
+    class="modal fade"
+    id="addRatingToCardModal"
+    tabindex="-1"
+    aria-labelledby="exampleModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+            {{ editting ? 'Edit' : 'Add' }} Rates To {{ selectedCard.name }} Card
+          </h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form role="form" (ngSubmit)="editting ? editCardRate() : addRatingToCard()" [formGroup]="ratingForm">
+            <div class="form-group my-3">
+              <ng-multiselect-dropdown
+                [placeholder]="'Select Country'"
+                [data]="countries"
+                [settings]="dropdownSettings"
+                (onSelect)="onCountrySelect($event)"
+                (onSelectAll)="onSelectAll($event)"
+              >
+              </ng-multiselect-dropdown>
+            </div>
+
+            <div class="form-group mt-3">
+              <label for="cardType">Card Type</label>
+              <input
+                type="text"
+                [ngClass]="{ 'is-invalid': submitted && r.cardType.errors }"
+                class="form-control"
+                formControlName="cardType"
+                id="cardType"
+              />
+
+              <div *ngIf="submitted && r.cardType.errors" class="invalid-feedback">
+                <div *ngIf="r.cardType.errors.required">
+                  Type of card is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mt-3">
+              <label for="rate">Rate</label>
+              <input
+                type="number"
+                [ngClass]="{ 'is-invalid': submitted && r.rate.errors }"
+                class="form-control"
+                formControlName="rate"
+                id="rate"
+              />
+
+              <div *ngIf="submitted && r.rate.errors" class="invalid-feedback">
+                <div *ngIf="r.rate.errors.required">
+                  Rate is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mt-3">
+              <label for="rate">Denomination</label>
+              <input
+                type="text"
+                [ngClass]="{ 'is-invalid': submitted && r.denomination.errors }"
+                class="form-control"
+                formControlName="denomination"
+                id="denomination"
+              />
+
+              <div *ngIf="submitted && r.denomination.errors" class="invalid-feedback">
+                <div *ngIf="r.denomination.errors.required">
+                  Denomination is required
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group mt-3" *ngIf="!r.allDaySales.value">
+              <label for="rate">Start Processing Time</label>
+              <input
+                type="time"
+                [ngClass]="{ 'is-invalid': submitted && r.startProcessingTime.errors }"
+                class="form-control"
+                formControlName="startProcessingTime"
+                id="startProcessingTime"
+              />
+            </div>
+
+            <div class="form-group mt-3" *ngIf="!r.allDaySales.value">
+              <label for="rate">End Processing Time</label>
+              <input
+                type="time"
+                [ngClass]="{ 'is-invalid': submitted && r.endProcessingTime.errors }"
+                class="form-control"
+                formControlName="endProcessingTime"
+                id="endProcessingTime"
+              />
+            </div>
+
+            <div class="mt-3">
+              <label for="allDaySales" class="mr-3">24 hour sales</label>
+              <input
+                type="checkbox"
+                [ngClass]="{ 'is-invalid': submitted && r.allDaySales.errors }"
+                formControlName="allDaySales"
+                id="allDaySales"
+              />
+            </div>
+
+            <button type="submit" class="btn btn-primary submit-btn" style="background-color: #142328; color: white;">
+              {{ editting ? 'Edit' : 'Add' }} Rate
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Disable Rate Sales Modal -->
+  <div
+    class="modal fade"
+    id="disableRateSalesModal"
+    tabindex="-1"
+    aria-labelledby="disableRateSalesModalLable"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="disableRateSalesModalLable">Disable Rate Sales</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form role="form" (ngSubmit)="disableRateSales()" [formGroup]="disableRateForm">
+            <div class="form-group">
+              <label for="name">Reason For Disabling</label>
+              <textarea
+                rows="5"
+                [ngClass]="{ 'is-invalid': submitted && d.reasonToDisable.errors }"
+                class="form-control"
+                formControlName="reasonToDisable"
+                id="reasonToDisable"
+              ></textarea>
+
+              <div *ngIf="submitted && d.reasonToDisable.errors" class="invalid-feedback">
+                <div *ngIf="d.reasonToDisable.errors.required">
+                  Reason for disabling is required
+                </div>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary submit-btn" style="background-color: #142328; color: white;">
+              Save changes
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

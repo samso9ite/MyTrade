@@ -1,0 +1,215 @@
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import 'src/scss/mixins/_selections.scss';
+@import '../../../variables.scss';
+
+.users {
+  ::-webkit-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow: hidden;
+  }
+  html {
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+
+  .scrollable {
+    max-height: 450px;
+    overflow-y: scroll;
+
+    @include mobile {
+      max-height: 350px;
+    }
+  }
+
+  .wrapper {
+    position: relative;
+    z-index: 10;
+    left: 282px;
+    width: calc(100% - 282px);
+    min-height: 100vh;
+    padding: 0;
+    transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    &.full {
+      left: 0;
+      width: 100%;
+    }
+    .content {
+      padding: 8em 3em 0em;
+      position: relative;
+      overflow-x: hidden;
+      .balance-overview {
+        margin-top: 3em;
+        @include balance-overview;
+      }
+      .transaction-history {
+        @include pagination_;
+        @include transaction-history-table;
+        border: none;
+        padding: 0px;
+      }
+      .quick-actions {
+        background: rgba($white, 0.8);
+        box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.15);
+        border-radius: 5px;
+        padding: 2em;
+        position: relative;
+        margin-bottom: 2em;
+        @include h3-title;
+        @include quick-actions;
+      }
+      .others {
+        .head {
+          padding: 2em 2em 0em;
+          border-bottom: 1px solid rgba(145, 154, 163, 0.25);
+          @include h3-title;
+          h3 {
+            margin-bottom: 1em;
+          }
+        }
+        .empty_record {
+          height: 100%;
+          div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 200px;
+            p {
+              color: $soft-red;
+              @include medium-font;
+              font-size: 18px;
+              span {
+                display: flex;
+                font-size: 14px;
+                color: rgba(black, 0.4);
+                @include regular-font;
+              }
+            }
+          }
+        }
+        .card {
+          border: 1px solid #f2f2f2;
+
+          .title {
+            padding: 2em 2em 1em;
+            border-bottom: 1px solid $grey;
+            @include h3_title;
+            h3 {
+              margin: 0em;
+            }
+            a {
+              color: #f47500;
+              text-decoration: none;
+              display: flex;
+              align-items: center;
+              ion-icon {
+                margin-left: 0.5em;
+              }
+            }
+          }
+        }
+        .savings_group {
+          background: $white;
+          border-radius: 4px;
+          position: relative;
+          margin-bottom: 2em;
+        }
+        .bills_group {
+          background: $white;
+          border-radius: 4px;
+          position: relative;
+          margin-bottom: 4em;
+        }
+        .transactions {
+          background: $white;
+          border-radius: 4px;
+          position: relative;
+          min-height: 500px;
+          .empty_record div {
+            padding: 4em 2em 4em;
+            height: 500px;
+          }
+          @include transaction_list;
+          &:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            width: -webkit-fill-available;
+            height: 112px;
+            // background: linear-gradient(180.21deg, rgba(255, 255, 255, 0) -18.02%, #ffffff 68.42%);
+            left: 0;
+            right: 1em;
+          }
+          .link_ {
+            position: absolute;
+            bottom: 0em;
+            z-index: 1;
+            width: -webkit-fill-available;
+            background: white;
+            a {
+              color: #f47500;
+              font-weight: 600;
+              margin-bottom: 1em;
+              font-size: 14px;
+              text-decoration: none;
+              cursor: pointer;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+      .content {
+        padding: 6em 1em 2em;
+        .others {
+          flex-direction: column;
+          .bills_group {
+            margin-bottom: 2em;
+          }
+          .transactions .empty_record div {
+            height: 300px;
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 991px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+      .content {
+        padding: 8em 3em 3em;
+        .others .bills_group {
+          margin-bottom: 2em;
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 1680px) {
+    .wrapper .content {
+      padding: 8em 7em 0em;
+    }
+  }
+}

@@ -1,0 +1,164 @@
+@import './../../../../variables.scss';
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import 'src/scss/mixins/_selections.scss';
+
+.dashboard {
+  overflow-y: hidden;
+  .sidebar {
+    height: 100vh;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: black;
+    padding: 20px 0px;
+    width: 250px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    transition: 0.5s;
+    background-image: url('./../../../../assets/images/backgrounds/background.png');
+    background-size: cover;
+
+    @include mobile {
+      width: 0px;
+    }
+
+    .logo-holder {
+      display: flex;
+      justify-content: center;
+
+      .logo {
+        border-radius: 10px;
+        padding: 20px 15px;
+        margin-top: 15px;
+        margin-bottom: 15px;
+
+        img {
+          width: 200px;
+        }
+      }
+    }
+
+    p {
+      color: white;
+      text-align: center;
+    }
+
+    .rule {
+      background-color: white;
+    }
+
+    .dashboard-active {
+      color: grey;
+      background-color: white;
+      border-radius: 30px;
+    }
+
+    a {
+      color: white;
+      text-decoration: none;
+      display: block;
+      transition: 0.3s;
+      padding: 10px 15px 10px 15px;
+      margin: 13px 0px;
+      font-size: 15px;
+
+      i {
+        font-size: 15px;
+        width: 40px;
+      }
+    }
+
+    .mobile-logout {
+      display: none;
+
+      @include mobile {
+        display: block;
+      }
+    }
+  }
+
+  .main {
+    margin-left: 250px;
+    transition: margin-left 0.5s;
+
+    @include mobile {
+      margin-left: 0px;
+      width: 100%;
+    }
+
+    .nav {
+      position: fixed;
+      top: 0;
+      padding: 15px 30px;
+      background-color: white;
+      color: grey;
+      display: flex;
+      justify-content: space-between;
+      width: calc(100% - 250px);
+      z-index: 10000;
+      box-shadow: 0 2px 2px -2px rgba(0, 0, 0, 0.9);
+
+      @include mobile {
+        width: 100%;
+      }
+
+      .right-content {
+        justify-items: flex-end;
+        display: flex;
+        justify-content: right;
+
+        div > i {
+          margin-right: 25px;
+          font-size: 18px;
+
+          @include mobile {
+            font-size: 20px;
+          }
+
+          &:hover {
+            cursor: pointer;
+          }
+        }
+
+        .logout {
+          display: block;
+          cursor: pointer;
+
+          a {
+            color: grey;
+
+            &:hover {
+              text-decoration: none;
+            }
+          }
+
+          @include mobile {
+            display: none;
+          }
+        }
+
+        .v-ellipsis {
+          display: none;
+
+          i {
+            margin-right: 0px;
+          }
+
+          @include mobile {
+            display: block;
+          }
+        }
+      }
+    }
+
+    &-content {
+      margin-top: 54px;
+      height: 100%;
+      overflow-y: scroll;
+    }
+  }
+
+  @include notifications;
+}

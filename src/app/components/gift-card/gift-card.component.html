@@ -1,0 +1,184 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<main class="users">
+  <app-sidebar [showMenu]="valueFromHeader"></app-sidebar>
+  <div class="wrapper" [ngClass]="{ full: valueFromHeader }">
+    <app-header (outputToParent)="getValue($event)"></app-header>
+    <div class="content">
+      <div class="title">
+        <button class="btn btn-primary_" style="text-transform: uppercase;" (click)="gotoAllCards()">
+          <span style="margin-right: 15px;">
+            <i class="fas fa-chevron-left"></i>
+          </span>
+          Back To Cards
+        </button>
+      </div>
+
+      <section class="card_transaction">
+        <div class="card-wrap">
+          <div class="text-center">
+            <img src="{{ card.image }}" class="img-fluid" width="150px" alt="{{ cardName }}" />
+            <h4 style="margin-top: 10px;">{{ cardName }}</h4>
+          </div>
+
+          <hr />
+
+          <form [formGroup]="cardForm" (ngSubmit)="proceedToconfirmation()" role="form">
+            <div class="input bordered">
+              <label>Card Type</label>
+              <select
+                class="select"
+                id="card_type"
+                name="card_type"
+                formControlName="card_type"
+                (change)="selectCard($event)"
+              >
+                <option [ngValue]="null" disabled>Card Type</option>
+                <option *ngFor="let item of cardTypes" [value]="item">{{ item }}</option>
+              </select>
+
+              <div *ngIf="submitted && f.card_type.errors" class="invalid-feedback">
+                <div *ngIf="f.card_type.errors.required">Please select the type of card</div>
+              </div>
+            </div>
+
+            <div class="input bordered" *ngIf="f.card_type.value.length">
+              <label>Select Country / Currency</label>
+              <select
+                class="select"
+                id="country"
+                name="country"
+                formControlName="country"
+                (change)="selectCountry($event)"
+              >
+                <option [ngValue]="null" disabled>Country</option>
+                <option *ngFor="let item of countries" [value]="item.country"
+                  >{{ item.country }} - {{ item.currency }}</option
+                >
+              </select>
+
+              <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                <div *ngIf="f.country.errors.required">Please select the country</div>
+              </div>
+            </div>
+
+            <div class="input bordered" [ngClass]="{ error: submitted && f.card_value.errors }">
+              <label>What's the value of the card</label>
+              <input type="number" placeholder="Card Value" formControlName="card_value" />
+
+              <div *ngIf="submitted && f.card_value.errors" class="invalid-feedback">
+                <div *ngIf="f.card_value.errors.required">Please enter the value for the card</div>
+              </div>
+            </div>
+
+            <div class="mb-5" *ngIf="!notFound && !disabledMessage">
+              <p class="text-center text-danger">Rate does not exist for this amount!</p>
+            </div>
+
+            <div class="mb-5" *ngIf="notFound && disabledMessage">
+              <p class="text-center text-danger">{{ disabledMessage }}</p>
+            </div>
+
+            <div class="d-flex justify-content-between align-items center">
+              <div>
+                <p style="margin-bottom: 3px;">You Get:</p>
+                <h5>{{ getAmount() | currency: '₦ ' }}</h5>
+              </div>
+
+              <button type="submit" class="btn btn-primary_" [disabled]="submitting">Confirm & Proceed</button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Upload Images Modal -->
+  <div
+    class="modal fade"
+    id="uploadImagesModal"
+    tabindex="-1"
+    aria-labelledby="uploadImagesModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="uploadImagesModalLabel">Upload Card Image(s)</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form role="form" (ngSubmit)="makeTransaction()" [formGroup]="cardForm">
+            <div class="customClass" style="margin-bottom: 20px; margin-top: 10px;">
+              <image-upload
+                [clearButtonCaption]="'Delete'"
+                [extensions]="['jpg', 'png']"
+                [url]="'https://api.imgur.com/3/image'"
+                [headers]="{ Authorization: 'Client-ID 96a699465410ec7' }"
+                (uploadFinished)="onUploadCardFinished($event)"
+                [max]="10"
+                [buttonCaption]="'Upload Images'"
+                [dropBoxMessage]="'Drop Images Here'"
+                (removed)="onRemoveCardImage($event)"
+              >
+              </image-upload>
+            </div>
+
+            <div class="input bordered mt-3 mb-3">
+              <textarea
+                name="card_digits"
+                placeholder="Note: If card digits are not clear, please enter them below"
+                formControlName="card_digits"
+                id="card_digits"
+                style="width: 100%;"
+                rows="10"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary_" style="float: right;">Complete Transaction</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Rate Performance -->
+  <div class="modal fade" id="ratingsModal" tabindex="-1" aria-labelledby="ratingsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="ratingsModalLabel">Rate Your Experience</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <form role="form" (ngSubmit)="sendFeedback()" [formGroup]="ratesForm">
+            <ngx-star-rating formControlName="rate" [id]="'rate'"></ngx-star-rating>
+
+            <div>Rating: {{ ratesForm.value.rate }}</div>
+            <!-- <div style="margin-bottom: 20px; margin-top: 10px;">
+            </div> -->
+
+            <div class="input bordered mt-3 mb-3">
+              <textarea
+                name="message"
+                placeholder="Please enter your sincere opinion. This is to help us give you the best experience, from your feedback"
+                formControlName="message"
+                id="message"
+                style="width: 100%;"
+                rows="10"
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary_" style="float: right;">Send Feedback</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

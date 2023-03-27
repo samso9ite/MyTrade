@@ -1,0 +1,154 @@
+<app-headers></app-headers>
+<main class="main">
+    <section class="faq">
+        <div class="wrap">
+            <div class="title">
+                <h1>Frequently Asked Questions</h1>
+            </div>
+            
+            <div id="faqs">
+                <div class="row">
+                    <div class="col-sm-12 col-md-12 col-lg-4">
+                        <div class="category-nav">
+                            <a class="item" *ngFor="let item of itemNav;  let i = index;" (click)="onSelect(item)"
+                                [ngClass]="{'active': item.id === selectedNavItem, 'indexActive': item.id === showFirst}">
+                                <strong>{{item.item}}</strong>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-12 col-lg-6">
+                        <!--Item 1-->
+                        <div class="faqs-content" *ngIf="selectedNavItem === 1 || showFirst">
+                            <div class="faqs-sect">
+                                <h2>What is MyTrade?</h2>
+                                <div>
+                                    <p> These terms of use are entered into by and between you and
+                                        In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                    <p>These terms of use are entered into by and between you and In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                </div>
+                                <div>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
+                                        fugit sint, numquam similique quaerat cumque dolore reprehenderit eum
+                                        aliquam eligendi recusandae delectus modi ex atque excepturi
+                                        doloribus nobis tenetur alias!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Item 2-->
+                        <div class="faqs-content" *ngIf="selectedNavItem === 2">
+                            <div class="faqs-sect">
+                                <h2>{{items.item}}</h2>
+                                <div>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus cupiditate
+                                        l
+                                        ibero perferendis rem iusto aperiam rerum tenetur,
+                                        ducimus fugit, accusamus omnis minus? Tempora, quaerat a at quasi odit quo
+                                        nihil.</p>
+                                </div>
+                                <div>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
+                                        fugit sint, numquam similique quaerat cumque dolore reprehenderit eum
+                                        aliquam eligendi recusandae delectus modi ex atque excepturi
+                                        doloribus nobis tenetur alias!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Item 3-->
+                        <div class="faqs-content" *ngIf="selectedNavItem === 3">
+                            <div class="faqs-sect">
+                                <h2>{{items.item}}</h2>
+                                <div>
+                                    <p> These terms of use are entered into by and between you and
+                                        In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                    <p>These terms of use are entered into by and between you and In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                </div>
+                                <div>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
+                                        fugit sint, numquam similique quaerat cumque dolore reprehenderit eum
+                                        aliquam eligendi recusandae delectus modi ex atque excepturi
+                                        doloribus nobis tenetur alias!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Item 4-->
+                        <div class="faqs-content" *ngIf="selectedNavItem === 4">
+                            <div class="faqs-sect">
+                                <h2>{{items.item}}</h2>
+                                <div>
+                                    <p> These terms of use are entered into by and between you and
+                                        In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                    <p>These terms of use are entered into by and between you and In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                </div>
+                                <div>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
+                                        fugit sint, numquam similique quaerat cumque dolore reprehenderit eum
+                                        aliquam eligendi recusandae delectus modi ex atque excepturi
+                                        doloribus nobis tenetur alias!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Item 5-->
+                        <div class="faqs-content" *ngIf="selectedNavItem === 5">
+                            <div class="faqs-sect">
+                                <h2>{{items.item}}</h2>
+                                <div>
+                                    <p> These terms of use are entered into by and between you and
+                                        In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                    <p>These terms of use are entered into by and between you and In Bloom Holding, Inc.
+                                        ("Couple", "we" or "us"). The following terms and conditions, together with any
+                                        documents they expressly incorporate by reference (collectively, these "Terms of
+                                        Use"), govern your access to and use of www.couple.co, including any content,
+                                        functionality, applications and services offered on or through Couple.co (the
+                                        "Website"), whether as a guest or a registered user.</p>
+                                </div>
+                                <div>
+                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
+                                        fugit sint, numquam similique quaerat cumque dolore reprehenderit eum
+                                        aliquam eligendi recusandae delectus modi ex atque excepturi
+                                        doloribus nobis tenetur alias!</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!--Item 6-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+<app-footer></app-footer>

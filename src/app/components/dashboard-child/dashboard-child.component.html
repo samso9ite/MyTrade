@@ -1,0 +1,293 @@
+<main class="users">
+  <!-- <app-sidebar></app-sidebar> -->
+  <app-sidebar [showMenu]="valueFromHeader"></app-sidebar>
+  <div class="wrapper" [ngClass]="{ full: valueFromHeader }">
+    <!-- <app-header></app-header> -->
+    <app-header (outputToParent)="getValue($event)"></app-header>
+    <div class="content">
+      <app-page-title></app-page-title>
+
+      <section class="balance-overview row">
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>Available Balance</span>
+              <ion-icon src="assets/img/svg/right-arrow.svg"></ion-icon>
+            </div>
+            <p><ion-icon src="assets/img/svg/naira.svg"></ion-icon> {{ user.availableAmount | currency: ' ' }}</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card">
+            <div class="d-flex justify-content-between align-items-center">
+              <span>Pending Balance</span>
+              <ion-icon src="assets/img/svg/right-arrow.svg"></ion-icon>
+            </div>
+            <p><ion-icon src="assets/img/svg/naira.svg"></ion-icon> {{ user.pendingAmount | currency: ' ' }}</p>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+                    <div class="card">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span>Total Income</span>
+                            <ion-icon src="assets/img/svg/right-arrow.svg"></ion-icon>
+                        </div>
+                        <p>
+                            <ion-icon src="assets/img/svg/naira.svg"></ion-icon> 00.00
+                        </p>
+                    </div>
+                </div> 
+      </section>
+
+      <section class="quick-actions">
+        <h3>Quick Actions</h3>
+        <div class="back" (click)="scrollLeft()">
+          <ion-icon name="chevron-back"></ion-icon>
+        </div>
+        <div class="forward" (click)="scrollRight()">
+          <ion-icon name="chevron-forward"></ion-icon>
+        </div>
+        <div class="scrollCards" #scrollCards>
+          <div class="list-items">
+            <div class="item">
+              <div class="d-flex justify-content-center align-items-center">
+                <ion-icon src="assets/img/svg/bitcoin.svg"></ion-icon>
+                <span>Bitcoin</span>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="d-flex justify-content-center align-items-center">
+                <ion-icon src="assets/img/svg/ethereum.svg"></ion-icon>
+                <span>Ethereum</span>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="d-flex justify-content-center align-items-center">
+                <ion-icon src="assets/img/svg/binance.svg"></ion-icon>
+                <span>Binance</span>
+              </div>
+            </div>
+
+            <div class="item">
+              <a
+                class="d-flex justify-content-center align-items-center"
+                style="text-decoration: none; color: black"
+                [routerLink]="['/dashboard/redeem-cards']"
+                routerLinkActive="router-link-active"
+              >
+                <div class="d-flex justify-content-center align-items-center">
+                  <ion-icon src="assets/img/svg/gift-card.svg"></ion-icon>
+                  <span>Giftcards</span>
+                </div>
+              </a>
+            </div>
+
+            <div class="item">
+              <div class="d-flex justify-content-center align-items-center">
+                <ion-icon src="assets/img/svg/event-icon.svg"></ion-icon>
+                <span>Airtime</span>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="d-flex justify-content-center align-items-center">
+                <ion-icon src="assets/img/svg/internet-icon.svg"></ion-icon>
+                <span>Data</span>
+              </div>
+            </div>
+
+            <div class="item">
+              <div class="d-flex justify-content-center align-items-center">
+                <ion-icon src="assets/img/svg/internet-icon.svg"></ion-icon>
+                <span>Internet</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="others">
+        <div class="row">
+          <!-- <div class="col-lg-5">
+                        <div class="card savings_group">
+                            <div class="head">
+                                <h3>Group Savings</h3>
+                            </div>
+                            <div class="empty_record">
+                                <div>
+                                    <p>You dont have any group savings yet</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card bills_group">
+                            <div class="head">
+                                <h3>Upcoming Bills</h3>
+                            </div>
+                            <div class="empty_record">
+                                <div>
+                                    <p>You dont have any upcoming Bills yet</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+          <div class="col-lg-12">
+            <div class="card transactions">
+              <div class="title d-flex justify-content-between align-items-center">
+                <h3>Recent Transactions</h3>
+                <a routerLink="/dashboard/transactions">See all <ion-icon name="chevron-forward"> </ion-icon></a>
+              </div>
+
+              <div *ngIf="!user.card_transactions.length" class="empty_record">
+                <div>
+                  <img src="assets/img/svg/no-transanction.svg" />
+                  <p>No transaction made yet <span>You have not carried any transaction</span></p>
+                </div>
+              </div>
+
+              <div *ngIf="user.card_transactions.length">
+                <div class="list-items">
+                  <div class="items">
+                    <section class="transaction-history">
+                      <div class="table-responsive">
+                        <table class="table">
+                          <thead>
+                            <tr>
+                              <th>*</th>
+                              <th>Card</th>
+                              <th>Value</th>
+                              <th>Amount</th>
+                              <th>Status</th>
+                              <th>Date Performed</th>
+                              <th>Date Completed</th>
+                            </tr>
+                          </thead>
+
+                          <tbody>
+                            <tr *ngFor="let item of transactions" (click)="gotoDetails(item)" style="cursor: pointer;">
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  <span class="completed">
+                                    <ion-icon src="assets/img/svg/arrow-up-right.svg"></ion-icon>
+                                  </span>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  {{ item.card }}
+                                </div>
+                              </td>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  {{ item.card_value }}
+                                </div>
+                              </td>
+                              <td class="green">
+                                <div class="d-flex align-items-center">
+                                  {{ item.amount | currency: 'NGN':'code' }}
+                                </div>
+                              </td>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  <small class="completed" *ngIf="item.status === 'paid'">Completed</small>
+                                  <small class="completed" *ngIf="item.status === 'approved'">Approved</small>
+                                  <small class="pending" *ngIf="item.status === 'pending'">Pending</small>
+                                  <small class="failed" *ngIf="item.status === 'declined'">Failed</small>
+                                </div>
+                              </td>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  {{ getFormattedDate(item.created_at) }}
+                                </div>
+                              </td>
+                              <td>
+                                <div class="d-flex align-items-center">
+                                  {{ getFormattedDate(item.updated_at) }}
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Details Modal -->
+  <div
+    class="modal fade"
+    id="viewDetailsModal"
+    tabindex="-1"
+    role="dialog"
+    aria-labelledby="viewDetailsModalTitle"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Transaction Details</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body scrollable">
+          <div class="mt-3" *ngIf="selectedTransaction.reasonForDeclination?.length">
+            <p class="text-danger">
+              <span style="font-weight: 900;">Reason For Declining:</span>
+              {{ selectedTransaction.reasonForDeclination }}
+            </p>
+          </div>
+
+          <div *ngIf="selectedTransaction.paymentReceipt?.length" class="mt-3 mb-3">
+            <p style="font-weight: 900;">Payment Receipt:</p>
+            <pinch-zoom>
+              <img src="{{ selectedTransaction.paymentReceipt }}" />
+            </pinch-zoom>
+          </div>
+
+          <div *ngIf="selectedTransaction.card_image?.length">
+            <p style="font-weight: 900;">Card Image(s):</p>
+
+            <div *ngFor="let image of selectedTransaction.card_image">
+              <pinch-zoom>
+                <img src="{{ image }}" />
+              </pinch-zoom>
+            </div>
+          </div>
+
+          <div *ngIf="selectedTransaction.card_digits?.length" class="mt-3">
+            <pre><span style="font-weight: 900;">Card Digits:</span> <br />{{ selectedTransaction.card_digits }}</pre>
+          </div>
+
+          <div class="mt-3" *ngIf="selectedTransaction.card_receipt_type?.length">
+            <p><span style="font-weight: 900;">Card Receipt Type:</span> {{ selectedTransaction.card_receipt_type }}</p>
+          </div>
+
+          <div class="mt-3" *ngIf="selectedTransaction.card_receipt?.length">
+            <p style="font-weight: 900;">Card Receipt:</p>
+            <pinch-zoom>
+              <img src="{{ selectedTransaction.card_receipt }}" />
+            </pinch-zoom>
+          </div>
+        </div>
+
+        <!-- <div class="modal-footer">
+                                    <button type="button" class="btn btn-success" (click)="declineCardTransaction()">Decline</button>
+                                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                                </div> -->
+      </div>
+    </div>
+  </div>
+</main>

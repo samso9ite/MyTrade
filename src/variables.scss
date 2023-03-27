@@ -1,0 +1,15 @@
+$color-text-primary: #000000;
+$background-primary: #f8fafc;
+$background-secondary: #ffffff;
+
+@mixin mobile {
+  @media (max-width: 770px) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: 780px) {
+    @content;
+  }
+}

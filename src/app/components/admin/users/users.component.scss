@@ -1,0 +1,108 @@
+@import '../../../../variables.scss';
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import 'src/scss/mixins/_selections.scss';
+
+.users {
+  margin-top: 10px;
+
+  .tables {
+    margin-top: 20px;
+    margin-bottom: 30px;
+
+    .header {
+      display: flex;
+      margin: 20px 0px 20px 0px;
+      justify-content: space-between;
+    }
+  }
+
+  .submit-btn {
+    margin: 15px 0px 10px 0px;
+    float: right;
+  }
+
+  .btn-actions {
+    padding: 5px 10px;
+  }
+
+  .scrollable {
+    max-height: 450px;
+    overflow-y: scroll;
+
+    @include mobile {
+      max-height: 350px;
+    }
+  }
+
+  .account-cards {
+    display: flex;
+    justify-content: space-around;
+
+    @include mobile {
+      display: block;
+    }
+
+    .item {
+      width: 48%;
+      height: 150px;
+      padding: 1em 1em;
+      position: relative;
+      // background: linear-gradient(360deg, #e2574c -44.29%, #f4b459 136.25%);
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+      border-radius: 5px;
+      margin-bottom: 10px;
+
+      @include mobile {
+        width: 100%;
+      }
+
+      .items-flex {
+        &:first-child {
+          ion-icon {
+            font-size: 20px;
+            color: $white;
+            cursor: pointer;
+          }
+        }
+        &:nth-child(2) {
+          position: relative;
+          top: 4em;
+          padding: 0em 3em 0em 0em;
+          label {
+            margin: 0;
+            font-size: 23px;
+            color: #fff;
+          }
+        }
+        &:nth-child(3) {
+          position: relative;
+          top: 6.5em;
+          label {
+            color: rgba($white, 0.7);
+            font-size: 14px;
+            margin: 0em;
+            @include bold-font;
+            span {
+              margin-right: 1em;
+            }
+          }
+        }
+      }
+    }
+
+    .selected {
+      background-color: #05a84e;
+      background-image: url('./../../../../assets/images/backgrounds/background.png');
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: cover;
+      color: white !important;
+
+      h3,
+      p {
+        color: white !important;
+      }
+    }
+  }
+}

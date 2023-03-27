@@ -1,0 +1,118 @@
+<main class="users">
+    <app-sidebar [showMenu]="valueFromHeader"></app-sidebar>
+    <div class="wrapper" [ngClass]="{ full: valueFromHeader }">
+        <app-header (outputToParent)="getValue($event)"></app-header>
+        <div class="content">
+            <div class="title">
+                <h3>Redeem Cards</h3>
+            </div>
+
+            <section class="card_transaction">
+                <form role="form" [formGroup]="cardForm" (ngSubmit)="redeemCard()">
+                    <div class="form-wrap">
+                        <aside>
+                            <label>What kind of card are you redeeming?</label>
+                    
+                            <div class="customers d-flex align-items-center justify-content-between">
+                                <div class="item" [ngClass]="{ select: physical }" (click)="selectPhysical()">
+                                    <ion-icon src="assets/img/svg/checkmark_green.svg"></ion-icon>
+                                    <div class="icon" style="background: url('assets/images/png/gift-card.png');"></div>
+                                    <p>Physical <span>Sell physical card by uploading card image</span></p>
+                                </div>
+                    
+                                <div class="item" [ngClass]="{ select: ecode }" (click)="selectEcode()">
+                                    <ion-icon src="assets/img/svg/checkmark_green.svg"></ion-icon>
+                                    <div class="icon" style="background: url('assets/images/png/binary-code.png');"></div>
+                                    <p>E-Code <span>Enter the code for the card, for the transaction</span></p>
+                                </div>
+                            </div>
+
+                            <div class="input bordered">
+                                <label>Select Card</label>
+                                <select class="select" id="card" name="card" formControlName="card" (change)="selectCard($event)">
+                                    <option [ngValue]="null" disabled>Select Card</option>
+                                    <option *ngFor="let item of cards" [value]="item | json">{{ item.name }}</option>
+                                </select>
+                            
+                                <div *ngIf="submitted && f.card.errors" class="invalid-feedback">
+                                    <div *ngIf="f.card.errors.required">Please select the card</div>
+                                </div>
+                            </div>
+
+                            <div class="input bordered" *ngIf="selectedCard.rates.length">
+                                <label>Select Currency</label>
+                                <select class="select" id="currency" name="currency" formControlName="currency" (change)="selectCurrency($event)">
+                                    <option [ngValue]="null" disabled>Select Currency</option>
+                                    <option *ngFor="let item of selectedCard.rates" [value]="item | json">{{ item.currency }}</option>
+                                </select>
+                            
+                                <div *ngIf="submitted && f.currency.errors" class="invalid-feedback">
+                                    <div *ngIf="f.currency.errors.required">Please select a currency</div>
+                                </div>
+                            </div>
+
+                            <div class="input bordered" [ngClass]="{ error: submitted && f.card_value.errors }">
+                                <label>What's the value of the card</label>
+                                <input type="number" placeholder="Card Value" formControlName="card_value" />
+                                                        
+                                <div *ngIf="submitted && f.card_value.errors" class="invalid-feedback">
+                                    <div *ngIf="f.card_value.errors.required">Please enter the value for the card</div>
+                                </div>
+                            </div>
+
+                            <div>
+                                <div class="customClass" style="margin-bottom: 20px;" *ngIf="physical">
+                                    <image-upload [clearButtonCaption]="'Delete'" [extensions]="['jpg','png']" [url]="'https://api.imgur.com/3/image'"
+                                        [maxFileSize]="1048576" [headers]="{Authorization: 'Client-ID 96a699465410ec7'}"
+                                        (uploadFinished)="onUploadCardFinished($event)" [max]="1" [buttonCaption]="'Upload Card Image'"
+                                        [dropBoxMessage]="'Drop Card Image Here'" (removed)="onRemoveCardImage($event)">
+                                    </image-upload>
+                                </div>
+
+                                <div *ngIf="submitted && f.card_image.errors" class="invalid-feedback" style="margin-top: 0px; margin-bottom: 10px;">
+                                    <div *ngIf="f.card_image.errors.required">Please upload card image</div>
+                                </div>
+                            </div>
+
+                            <div class="input bordered" [ngClass]="{ error: submitted && f.card_digits.errors }">
+                                <label>Card Digits</label>
+                                <input type="text" placeholder={{placeholder}} formControlName="card_digits" />
+
+                                <small *ngIf="physical" class="mt-1" style="font-weight: lighter; color: grey;">Optionally, enter the digits on the card, if the image is not clear enough </small>
+                            </div>
+
+                            <div class="input bordered">
+                                <label>Select Receipt Type</label>
+                                <select class="select" id="card" name="card" formControlName="card_receipt_type" (change)="selectReceipt($event)">
+                                    <option [ngValue]="null" disabled>Select Receipt Type</option>
+                                    <option *ngFor="let item of receipts" [value]="item">{{ item }}</option>
+                                </select>
+                            
+                                <div *ngIf="submitted && f.card_receipt_type.errors" class="invalid-feedback">
+                                    <div *ngIf="f.card_receipt_type.errors.required">Please select your receipt type</div>
+                                </div>
+                            </div>
+
+                            <div class="customClass" style="margin-bottom: 20px;" *ngIf="uploadReceipt">
+                                <image-upload [clearButtonCaption]="'Delete'" [extensions]="['jpg','png']" [url]="'https://api.imgur.com/3/image'"
+                                    [maxFileSize]="1048576" [headers]="{Authorization: 'Client-ID 96a699465410ec7'}"
+                                    (uploadFinished)="onUploadReceiptFinished($event)" [max]="1" [buttonCaption]="'Upload Receipt Image'"
+                                    [dropBoxMessage]="'Drop Receipt Image Here'" (removed)="onRemoveReceiptImage($event)">
+                                </image-upload>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items center">
+                                <div>
+                                    <p style="margin-bottom: 3px;">Total:</p>
+                                    <h5>{{getAmount() | currency: '₦ '}}</h5>
+                                </div>
+                                <button type="submit" class="btn btn-primary_" [disabled]="submitting">Redeem Card</button>
+                            </div>
+
+                        </aside>
+                    </div>
+                </form>
+            </section>
+        </div>
+    </div>
+</main>

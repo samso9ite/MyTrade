@@ -1,0 +1,166 @@
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import 'src/scss/mixins/_selections.scss';
+.users {
+  ::-webkit-scrollbar {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overflow: hidden;
+  }
+  html {
+    overflow: scroll;
+    overflow-x: hidden;
+  }
+  #sidebar {
+    position: fixed;
+    width: 282px;
+    height: 100vh;
+    overflow: hidden;
+    overflow-y: auto;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    background: $white;
+    transform: scale(1);
+    transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.03);
+    &.show {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    .logo {
+      margin-bottom: 3em;
+      width: -webkit-fill-available;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      padding: 1.5em 3em 0em;
+    }
+    .container {
+      .sidebar-header {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 0em 1em 2em;
+        text-align: center;
+        margin-bottom: 2em;
+        border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+
+        p {
+          color: $black;
+          font-size: 16px;
+          margin: 1em 0em 0em;
+          @include bold-font;
+          small {
+            display: block;
+            color: rgba($black, 0.5);
+            font-size: 13px;
+            @include regular-font;
+          }
+        }
+
+        div {
+          &:nth-child(1) {
+            width: 87px;
+            height: 87px;
+            border-radius: 50%;
+            background-repeat: no-repeat !important;
+            background-size: cover !important;
+            background-position: center !important;
+            position: relative;
+            @include settings_tag;
+          }
+        }
+      }
+      .sidebar-content {
+        display: flex;
+        align-items: center;
+        justify-content: stretch;
+        height: calc(100% - 160px);
+        ul {
+          list-style: none;
+          padding-left: 0;
+          margin-bottom: 0;
+          width: 100%;
+          li {
+            position: relative;
+            padding: 1.5em 34px;
+            border-bottom: 1px solid rgba(224, 224, 224, 0.5);
+            a {
+              position: relative;
+              display: flex;
+              align-items: center;
+              padding: 0.5em 0em;
+              text-transform: capitalize;
+              font-size: 14px;
+              cursor: pointer;
+              text-decoration: none;
+              transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+              .icon img {
+                width: 21px;
+                height: auto;
+                filter: grayscale(1);
+                opacity: 0.3;
+              }
+              span {
+                margin-left: 20px;
+                color: rgba($black, 0.5);
+              }
+              &:hover {
+                .icon img {
+                  filter: grayscale(0);
+                  opacity: 1;
+                }
+                span {
+                  color: $yellow;
+                }
+              }
+
+              &.active {
+                .icon img {
+                  filter: grayscale(0);
+                  opacity: 1;
+                }
+                span {
+                  @include bold-font;
+                  color: $yellow;
+                }
+
+                &::after {
+                  left: -49.5px;
+                }
+              }
+            }
+
+            &:nth-child(7) {
+              margin-bottom: 5em;
+              border-bottom: none;
+
+              a {
+                .icon img {
+                  filter: grayscale(0);
+                  opacity: 1;
+                }
+                span {
+                  color: #dc1825;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+    @media only screen and (max-width: 991px) {
+      display: block;
+      transform: scale(0.9);
+      opacity: 0;
+      height: 100%;
+      &.show {
+        transform: scale(1);
+        opacity: 1;
+        top: 7.5em;
+      }
+    }
+  }
+}

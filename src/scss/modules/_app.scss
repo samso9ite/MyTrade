@@ -1,0 +1,48 @@
+.animate__fadeIn {
+  animation-name: fadeIn;
+}
+.animate__fadeInUp {
+  animation-name: fadeInUp;
+}
+
+.delay-1m {
+  animation-delay: 150ms;
+}
+
+.delay-2m {
+  animation-delay: 550ms;
+}
+.delay-3m {
+  animation-delay: 1100ms;
+}
+.delay-4m {
+  animation-delay: 1250ms;
+}
+.delay-5m {
+  animation-delay: 1400ms;
+}
+.delay-6m {
+  animation-delay: 1550ms;
+}
+.delay-7m {
+  animation-delay: 1700ms;
+}
+.delay-8m {
+  animation-delay: 1850ms;
+}
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}

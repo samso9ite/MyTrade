@@ -1,0 +1,118 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<app-top-info></app-top-info>
+
+<div class="register">
+  <div class="register-image">
+    <img
+      class="animate__animated  animate__fadeInLeft delay-1m"
+      src="/assets/images/register/register.svg"
+      alt="login avatar"
+    />
+  </div>
+
+  <div class="register-content animate__animated  animate__fadeIn delay-1m">
+    <div class="container register-content-card">
+      <div class="register-content-cards">
+        <div class="animate__animated animate__fadeInDown delay-1m text-center">
+          <a class="logo animate__animated  animate__fadeInUp delay-2m" routerLink="/">
+            <img src="assets/images/logo/logo.png" class="img-fluid mb-4" style="width: 50%;" alt="logo" />
+          </a>
+          <h2 class="title">Create Your Trading Account</h2>
+          <p class="description">Register with us, and enjoy all the benefits of trading in inconvenience.</p>
+        </div>
+
+        <form
+          class="animate__animated  animate__fadeIn delay-2m"
+          role="form"
+          [formGroup]="registerForm"
+          (ngSubmit)="register()"
+        >
+          <div class="input bordered" [ngClass]="{ error: submitted && f.fullname.errors }">
+            <label>Full Name*</label>
+            <input type="text" placeholder="Tell us your full name" formControlName="fullname" (focus)="onFocus()" />
+
+            <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+              <div *ngIf="f.fullname.errors.required">Full name is required</div>
+            </div>
+          </div>
+
+          <div class="input bordered" [ngClass]="{ error: submitted && f.username.errors }">
+            <label>Username*</label>
+            <input type="text" placeholder="Tell us your username" formControlName="username" (focus)="onFocus()" />
+
+            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+              <div *ngIf="f.username.errors.required">Last Name is required</div>
+            </div>
+          </div>
+
+          <div class="input bordered" [ngClass]="{ error: submitted && f.email.errors }">
+            <label>Email address*</label>
+            <input type="email" placeholder="Enter your email address" formControlName="email" (focus)="onFocus()" />
+
+            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+              <div *ngIf="f.email.errors.required">Email address is required</div>
+              <div *ngIf="f.email.errors.email">Please enter a valid email address</div>
+            </div>
+          </div>
+
+          <div class="input bordered" [ngClass]="{ error: submitted && f.phoneNumber.errors }">
+            <label>Phone number*</label>
+            <input
+              type="tel"
+              placeholder="Enter your phone number"
+              (keypress)="keyPress($event)"
+              formControlName="phoneNumber"
+              (focus)="onFocus()"
+            />
+
+            <div *ngIf="submitted && f.phoneNumber.errors" class="invalid-feedback">
+              <div *ngIf="f.phoneNumber.errors.required">Phone number is required</div>
+              <div *ngIf="f.phoneNumber.errors.minlength">Please enter a valid phone number</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between">
+            <div class="input bordered mr-1" [ngClass]="{ error: submitted && f.password.errors }">
+              <label>Password*</label>
+              <input
+                class="password"
+                type="password"
+                placeholder="* * * * *"
+                formControlName="password"
+                (focus)="onFocus()"
+              />
+
+              <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <div *ngIf="f.password.errors.required">Enter your password</div>
+                <div *ngIf="f.password.errors.minlength">Password must be at least 8 characters long</div>
+              </div>
+            </div>
+
+            <div class="input bordered ml-1" [ngClass]="{ error: submitted && f.confirmPassword.errors }">
+              <label>Confirm Password*</label>
+              <input
+                class="password"
+                type="password"
+                placeholder="* * * * *"
+                formControlName="confirmPassword"
+                (focus)="onFocus()"
+              />
+
+              <div *ngIf="submitted && f.confirmPassword.errors" class="invalid-feedback">
+                <div *ngIf="f.confirmPassword.errors.required">Please confirm your password</div>
+                <div *ngIf="f.confirmPassword.errors.minlength">Password must be at least 8 characters long</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="action d-flex" style="justify-content: space-between; align-items: center;">
+            <button class="btn btn-primary_" type="submit" [disabled]="submitting">Register</button>
+
+            <p class="text-right">Have an account? <a routerLink="/login">Login</a></p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

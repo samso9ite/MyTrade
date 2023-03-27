@@ -1,0 +1,333 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<div class="dashboard-content container-fluid">
+    <div class="tables">
+        <div class="header mt-4 mb-3">
+            <h4>All Transactions</h4>
+        </div>
+
+        <ngx-datatable class="material expandable" [rows]="allTransactions" [columnMode]="ColumnMode.force"
+            [headerHeight]="50" [footerHeight]="50" rowHeight="auto" [limit]="10" [scrollbarH]="true">
+
+            <ngx-datatable-column name="Purchase">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Purchase</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.card}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Value">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Card Value</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>({{row.country}}) {{row.card_value}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Amount">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Amount</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{ row.amount | currency: '₦ ' }}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Customer">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Name</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.user.fullname}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Phone">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Phone</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.user.phone}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Reference">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Reference</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.transaction_reference}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Status">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Status</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{ row.status }}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Date">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Transaction Date</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.date}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+
+            <ngx-datatable-column name="Stores">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Actions</span>
+                </ng-template>
+
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button title="Approve Transaction" class="btn btn-outline-success btn-actions"
+                            (click)="onApproveTransaction(row)" [disabled]="row.status !== 'pending'">
+                            <i class="fas fa-check"></i>
+                        </button>
+
+                        <button title="View Accounts" class="btn btn-outline-dark btn-actions"
+                            (click)="onViewTransaction(row)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+
+                        <button title="Decline Transaction" class="btn btn-outline-danger btn-actions"
+                            (click)="onDeclineTransaction(row)" [disabled]="row.status !== 'pending'">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+
+    <!-- Approve Modal -->
+    <div class="modal fade" id="approveModal" tabindex="-1" role="dialog" aria-labelledby="approveModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Approve Transaction</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Are you sure you want to approve this transaction?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" (click)="approveCardTransaction()">Approve</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Decline Modal -->
+    <div class="modal fade" id="declineModal" tabindex="-1" role="dialog" aria-labelledby="declineModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Decline Transaction</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>Are you sure you want to decline this transaction?</p>
+
+                    <form role="form" [formGroup]="declineForm" (ngSubmit)="declineCardTransaction()">
+                        <div>
+                            <textarea name="reasonForDeclination"
+                                placeholder="Please, Enter the reason for declining this transaction"
+                                formControlName="reasonForDeclination" id="reasonForDeclination" style="width: 100%;"
+                                rows="10"></textarea>
+
+                            <div *ngIf="submitted && f.reasonForDeclination.errors" class="invalid-feedback">
+                                <div *ngIf="f.reasonForDeclination.errors.required">Please enter the reason for
+                                    declining this transaction</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" (click)="declineCardTransaction()">Decline</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Details Modal -->
+    <div class="modal fade" id="detailsModal" tabindex="-1" role="dialog" aria-labelledby="detailsModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Transaction Details
+                        ({{selectedTransaction.transaction_reference}})</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body scrollable">
+                    <div>
+                        <h6>Customer Details</h6>
+                        <hr style="margin-top: 5px;">
+
+                        <div class="d-flex">
+                            <img *ngIf="selectedTransaction.user?.image?.length" src={{selectedTransaction.user.image}}
+                                alt="User Avatar" style="height: 100px;">
+
+                            <div style="margin-left: 20px;">
+                                <p style="font-size: 25px; font-weight: bold;">{{selectedTransaction.user.fullname}}</p>
+                                <p style="margin-top: 0px; margin-bottom: 5px;">{{selectedTransaction.user.email}}</p>
+                                <p style="margin-top: 0px; margin-bottom: 5px;">{{selectedTransaction.user.phone}}</p>
+                            </div>
+                        </div>
+
+                        <hr>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <h6>Customer Bank Account Details</h6>
+                        <hr style="margin-top: 5px;">
+
+                        <div *ngIf="selectedTransaction.user?.accountInfo?.length" class="account-cards">
+                            <div class="item" style="cursor: pointer;" [ngClass]="{selected: item.active}"
+                                *ngFor="let item of selectedTransaction.user?.accountInfo">
+                                <div class="mt-1">
+                                    <p style="font-weight: lighter; font-size: 15px; word-wrap: break-word;">
+                                        {{item.name}}</p>
+
+                                    <h3>{{item.bank_name}}</h3>
+
+                                    <p style="color: grey; font-weight: bold">{{item.number}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!selectedTransaction.user?.accountInfo?.length">
+                            <p>This user has no accounts saved</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <h6>Card Transaction Details</h6>
+                        <hr style="margin-top: 5px;">
+
+                        <div>
+                            <p><span style="font-weight: 900;">Card:</span> {{ selectedTransaction.card }}</p>
+
+                            <p><span style="font-weight: 900;">Card Type:</span> {{ selectedTransaction.card_type }}</p>
+
+                            <p><span style="font-weight: 900;">Card Value:</span> {{ selectedTransaction.card_value }}
+                            </p>
+
+                            <p><span style="font-weight: 900;">Card currency:</span> {{ selectedTransaction.country }}
+                            </p>
+
+                            <p><span style="font-weight: 900;">Selling Rate:</span> {{ selectedTransaction.rate }}</p>
+
+                            <div *ngIf="selectedTransaction.card_image?.length">
+                                <p style="font-weight: 900;">Card Image(s): </p>
+                            
+                                <div *ngFor="let image of selectedTransaction.card_image">
+                                    <pinch-zoom>
+                                        <img src={{image}} />
+                                    </pinch-zoom>
+                                </div>
+                            </div>
+
+                            <div *ngIf="selectedTransaction.card_digits?.length" class="mt-3">
+                                <pre><span style="font-weight: 900;">Card Digits:</span> <br />{{ selectedTransaction.card_digits }}</pre>
+                            </div>
+
+                            <div *ngIf="selectedTransaction.card_receipt_type?.length">
+                                <p><span style="font-weight: 900;">Card Receipt Type:</span> {{
+                                    selectedTransaction.card_receipt_type }}</p>
+                            </div>
+
+                            <div *ngIf="selectedTransaction.card_receipt?.length">
+                                <p style="font-weight: 900;">Card Receipt: </p>
+                                <pinch-zoom>
+                                    <img src={{selectedTransaction.card_receipt}} />
+                                </pinch-zoom>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" [disabled]="selectedTransaction.status !== 'approved'"
+                        (click)="uploadPaymentReceipt()">Upload Payment Proof</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payment Receipt Upload Modal -->
+    <div class="modal fade" id="receiptModal" tabindex="-1" role="dialog" aria-labelledby="receiptModalTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Upload Payment Receipt</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="modal-body scrollable">
+
+                    <div>
+                        <div class="customClass" style="margin-bottom: 20px;">
+                            <image-upload [clearButtonCaption]="'Delete'" [extensions]="['jpg','png']"
+                                [url]="'https://api.imgur.com/3/image'" [maxFileSize]="1048576"
+                                [headers]="{Authorization: 'Client-ID 96a699465410ec7'}" (uploadFinished)="onUploadCardFinished($event)"
+                                [max]="1" [buttonCaption]="'Upload Payment Receipt'" [dropBoxMessage]="'Drop Receipt Image Here'"
+                            >
+                            </image-upload>
+                        </div>
+                    
+                        <div *ngIf="submitted && p.receiptImage.errors" class="invalid-feedback"
+                            style="margin-top: 0px; margin-bottom: 10px;">
+                            <div *ngIf="p.receiptImage.errors.required">Please upload payment receipt</div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" [disabled]="selectedTransaction.status !== 'approved'"
+                        (click)="payOutCardTransaction()">Pay Out</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

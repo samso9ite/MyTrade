@@ -1,0 +1,57 @@
+<app-loader *ngIf="loading"></app-loader>
+<div class="login">
+    <div>
+        <!-- <div class="dash-img">
+            <img src="assets/images/Dash Logo White.png" alt="" />
+        </div> -->
+        <div class="card">
+            <h5 class="card-header text-center">Admin Login</h5>
+            <div class="card-body">
+                <form [formGroup]="loginForm" (ngSubmit)="login()">
+                    <div class="col-12">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupPrepend2">
+                                    <img height="16px" src="assets/images/user.png" alt="User Icon" />
+                                </span>
+                            </div>
+                            <input type="text" [ngClass]="{ 'is-invalid': submitted && f.email.errors }"
+                                class="form-control" id="email" placeholder="admin@mytrade.com" formControlName="email"
+                                required />
+                            <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                <div *ngIf="f.email.errors.required">
+                                    Email Address is required
+                                </div>
+                                <div *ngIf="f.email.errors.email">
+                                    Please enter a correct email address
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="inputGroupPrepend2">
+                                    <img height="16px" src="assets/images/padlock.png" alt="Password Icon" />
+                                </span>
+                            </div>
+                            <input type="password" [ngClass]="{ 'is-invalid': submitted && f.password.errors }"
+                                class="form-control" id="password" placeholder="* * * * *" formControlName="password"
+                                required />
+                            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                                <div *ngIf="f.password.errors.required">
+                                    Password is required
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 mt-4">
+                        <button class="btn btn-login">Login</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

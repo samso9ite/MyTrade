@@ -1,0 +1,119 @@
+<div class="dashboard">
+  <div id="sidenav" class="sidebar">
+    <div class="container">
+      <div class="logo-holder">
+        <div class="logo">
+          <img src="assets/images/logo/logo.svg" alt="mytrade logo" />
+        </div>
+      </div>
+      <div>
+        <a
+          [routerLink]="['/admin/dashboard']"
+          routerLinkActive="dashboard-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeSideNav()"
+        >
+          <i class="fas fa-clipboard-list"></i> Dashboard
+        </a>
+
+        <a
+          [routerLink]="['/admin/dashboard/pending-transactions']"
+          routerLinkActive="dashboard-active"
+          (click)="closeSideNav()"
+        >
+          <i class="fas fa-stopwatch"></i> Pending
+        </a>
+
+        <a
+          [routerLink]="['/admin/dashboard/transactions']"
+          routerLinkActive="dashboard-active"
+          (click)="closeSideNav()"
+        >
+          <i class="fas fa-list-alt"></i> Approved
+        </a>
+
+        <a [routerLink]="['/admin/dashboard/feedbacks']" routerLinkActive="dashboard-active" (click)="closeSideNav()">
+          <i class="fas fa-comments"></i> Feedbacks
+        </a>
+
+        <a
+          [routerLink]="['/admin/dashboard/cards']"
+          routerLinkActive="dashboard-active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          (click)="closeSideNav()"
+        >
+          <i class="fas fa-credit-card"></i>Cards
+        </a>
+
+        <a [routerLink]="['/admin/dashboard/users']" routerLinkActive="dashboard-active" (click)="closeSideNav()">
+          <i class="fas fa-users-cog"></i> Users
+        </a>
+
+        <a (click)="logout()" class="mobile-logout"> <i class="fa fa-sign-out" aria-hidden="true"></i> Logout </a>
+      </div>
+    </div>
+  </div>
+
+  <div id="main" class="main">
+    <nav class="nav">
+      <div class="left-content">Dashboard</div>
+      <div class="right-content">
+        <div>
+          <i class="fa fa-bell-o" style="font-size: 18px" aria-hidden="true" (click)="openNotification()"></i>
+        </div>
+
+        <div>
+          <i class="fa fa-question-circle-o" aria-hidden="true"></i>
+        </div>
+
+        <div class="logout" (click)="logout()">
+          <a> Logout </a>
+        </div>
+
+        <div class="v-ellipsis" (click)="showSideNav()">
+          <i class="fa fa-bars" aria-hidden="true"></i>
+        </div>
+      </div>
+    </nav>
+
+    <div class="main-content" (click)="closeSideNav()">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+  <div class="overlay" [ngClass]="{ display: showNotification }" style="z-index: 10000">
+    <div
+      class="close_ animate__animated animate__fadeIn delay-2m"
+      (click)="openNotification()"
+      [ngClass]="{ hide: !showNotification }"
+    >
+      <ion-icon src="assets/img/svg/x.svg"></ion-icon> <span>Close</span>
+    </div>
+
+    <div class="notification">
+      <div class="title d-flex justify-content-between align-items-center">
+        <h3 class="animate__animated animate__fadeIn delay-2m">
+          Notifications
+        </h3>
+        <div class="mb_close" (click)="openNotification()">
+          <ion-icon src="assets/img/svg/x.svg"></ion-icon>
+        </div>
+      </div>
+      <ul>
+        <li
+          [ngClass]="{
+            'animate__animated animate__fadeInUp delay-2m': showNotification
+          }"
+        >
+          <div class="d-flex align-items-center">
+            <div class="icon">
+              <img src="assets/img/svg/notif_bell_icon.svg" />
+            </div>
+            <p>Welcome to MyTrade Admin</p>
+          </div>
+          <label class="t_stamp">12 / 03 / 2020</label>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

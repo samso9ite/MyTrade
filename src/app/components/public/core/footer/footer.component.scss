@@ -1,0 +1,79 @@
+@import "src/scss/modules/_vars.scss";
+@import "src/scss/modules/_typography.scss";
+footer {
+  .wrap {
+    display: flex;
+    justify-content: space-between;
+    padding: 2em 6em 2em;
+    // margin-top: 6em;
+    align-items: center;
+    background-color: #124990;
+
+    .left {
+      color: rgba($black, 0.7);
+
+      a {
+        margin-right: 1.5em;
+        font-size: 14px;
+        color: rgba($black, 0.7);
+        text-decoration: none;
+        position: relative;
+        cursor: pointer;
+
+        &:last-child {
+          margin-right: 0em;
+        }
+
+        &:after {
+          content: "";
+          position: absolute;
+          width: 0%;
+          height: 1px;
+          background: $yellow;
+          left: 0;
+          bottom: 0em;
+          transition: 0.3s ease-in;
+        }
+
+        &:hover {
+          &:after {
+            width: 100%;
+          }
+        }
+        
+        &.active {
+          color: $yellow;
+          font-weight: 600;
+        }
+      }
+    }
+
+    .phone-number {
+      font-weight: lighter;
+      margin-top: 1em;
+      margin-bottom: 0.5em;
+      text-align: center;
+    }
+
+    p {
+      margin: 0em;
+      font-size: 14px;
+      color: rgba($black, 0.7);
+    }
+  }
+  @media only screen and (min-width: 320px) and (max-width: 767px) {
+    .wrap {
+      padding: 2em 1em 2em;
+      margin-top: 6em;
+      flex-direction: column;
+      .left {
+        margin-bottom: 2em;
+      }
+    }
+  }
+  @media only screen and (min-width: 1680px) {
+    .wrap {
+      margin-top: 12em;
+    }
+  }
+}

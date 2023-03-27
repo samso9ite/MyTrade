@@ -1,0 +1,166 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<div class="users container-fluid">
+    <div class="tables">
+        <div class="header">
+            <h3>Users</h3>
+        </div>
+
+        <ngx-datatable class="material expandable" [rows]="allUsers" [columnMode]="ColumnMode.force" [headerHeight]="50"
+            [footerHeight]="50" rowHeight="auto" [limit]="10" [scrollbarH]="true">
+        
+            <ngx-datatable-column name="Name">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Name</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.fullname}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+        
+            <ngx-datatable-column name="Email">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Email Address</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.email}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+        
+            <ngx-datatable-column name="Phone">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Phone Number</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.phone}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+        
+            <ngx-datatable-column name="Available">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Available Amount</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.availableAmount | currency: '₦ '}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+        
+            <ngx-datatable-column name="Pending Amount">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Pending Amount</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.pendingAmount | currency: '₦ '}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+        
+            <ngx-datatable-column name="No Of Transactions">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Number Of Transactions</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div>{{row.card_transactions.length}}</div>
+                </ng-template>
+            </ngx-datatable-column>
+        
+            <ngx-datatable-column name="Verified">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Verification Status</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div *ngIf="row.is_verified" style="color: green; font-size: 22px;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+    
+                    <div *ngIf="!row.is_verified" style="color: red; font-size: 22px;">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+        
+            <ngx-datatable-column name="Cards">
+                <ng-template let-column="column" ngx-datatable-header-template>
+                    <span>Actions</span>
+                </ng-template>
+        
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button title="View Accounts" class="btn btn-outline-dark btn-actions" (click)="onSelectUser(row)">
+                            <i class="fas fa-eye"></i>
+                        </button>
+        
+                        <!-- <button title="Delete Store Category" class="btn btn-outline-danger btn-actions"
+                            (click)="deleteCard(row._id)">
+                            <i class="far fa-trash-alt"></i>
+                        </button> -->
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+
+    <!-- View User's Account Modal -->
+    <div class="modal fade" id="userAccountsModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">{{selectedUser.fullname}}'s Account information</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+    
+                <div class="modal-body scrollable">
+                    <div>
+                        <h6>Customer Details</h6>
+                        <hr style="margin-top: 5px;">
+                    
+                        <div class="d-flex">
+                            <img *ngIf="selectedUser.image?.length" src={{selectedUser.image}} alt="User Avatar"
+                                style="height: 100px;">
+                    
+                            <div style="margin-left: 20px;">
+                                <p style="font-size: 25px; font-weight: bold;">{{selectedUser.fullname}}</p>
+                                <p style="margin-top: 0px; margin-bottom: 5px;">{{selectedUser.email}}</p>
+                                <p style="margin-top: 0px; margin-bottom: 5px;">{{selectedUser.phone}}</p>
+                            </div>
+                        </div>
+                    
+                        <hr>
+                    </div>
+
+                    <div style="margin-top: 25px;">
+                        <h6>Customer Bank Account Details</h6>
+                        <hr style="margin-top: 5px;">
+                    
+                        <div *ngIf="selectedUser.accountInfo?.length" class="account-cards">
+                            <div class="item" style="cursor: pointer;" [ngClass]="{selected: item.active}"
+                                *ngFor="let item of selectedUser.accountInfo">
+                                <div class="mt-1">
+                                    <p style="font-weight: lighter; font-size: 15px; word-wrap: break-word;">
+                                        {{item.name}}</p>
+                    
+                                    <h3>{{item.bank_name}}</h3>
+                    
+                                    <p style="color: grey; font-weight: bold">{{item.number}}</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!selectedUser.accountInfo?.length">
+                            <p>This user has no accounts saved</p>
+                        </div>
+                    </div>
+                </div>
+    
+            </div>
+        </div>
+    </div>
+</div>

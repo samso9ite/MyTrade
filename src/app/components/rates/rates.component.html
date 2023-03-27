@@ -1,0 +1,261 @@
+<app-loader *ngIf="loading"></app-loader>
+
+<main class="users">
+  <app-sidebar [showMenu]="valueFromHeader"></app-sidebar>
+  <div class="wrapper" [ngClass]="{ full: valueFromHeader }">
+    <app-header (outputToParent)="getValue($event)"></app-header>
+    <div class="content">
+      <div class="title">
+        <h3>Rates</h3>
+      </div>
+
+      <section class="card_transaction">
+        <div class="wrappers">
+          <div class="card-wrap">
+            <div class="header-top">
+              <img src="assets/images/png/calculator.png" width="50px" alt="calculator" />
+
+              <div class="ml-3">
+                <h4>Rate Calculator</h4>
+                <p>Get card currency equivalent in naira</p>
+              </div>
+            </div>
+
+            <div style="margin-top: 40px;">
+              <nav>
+                <div class="nav nav-tabs nav-fill" id="nav-tab" role="tablist">
+                  <a
+                    class="nav-link active"
+                    id="nav-home-tab"
+                    data-toggle="tab"
+                    href="#nav-home"
+                    role="tab"
+                    aria-controls="nav-home"
+                    aria-selected="true"
+                    >GIFTCARDS</a
+                  >
+
+                  <a
+                    class="nav-link"
+                    id="nav-profile-tab"
+                    data-toggle="tab"
+                    href="#nav-profile"
+                    role="tab"
+                    aria-controls="nav-profile"
+                    aria-selected="false"
+                    >BITCOIN</a
+                  >
+                </div>
+              </nav>
+
+              <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+                  <form [formGroup]="cardForm" role="form" class="mt-4">
+                    <div class="input bordered">
+                      <label>Select Digital Asset</label>
+                      <select class="select" id="card" name="card" formControlName="card" (change)="selectCard($event)">
+                        <option [ngValue]="null" disabled>Digital Asset</option>
+                        <option *ngFor="let item of allCards" [value]="item | json">{{ item.name }}</option>
+                      </select>
+                    </div>
+
+                    <div class="input bordered">
+                      <label>Card Type</label>
+                      <select
+                        class="select"
+                        id="card_type"
+                        name="card_type"
+                        formControlName="card_type"
+                        (change)="selectType($event)"
+                      >
+                        <option [ngValue]="null" disabled>Card Type</option>
+                        <option *ngFor="let item of cardTypes" [value]="item">{{ item }}</option>
+                      </select>
+
+                      <div *ngIf="submitted && f.card_type.errors" class="invalid-feedback">
+                        <div *ngIf="f.card_type.errors.required">Please select the type of card</div>
+                      </div>
+                    </div>
+
+                    <div class="input bordered" *ngIf="f.card_type.value.length">
+                      <label>Select Country / Currency</label>
+                      <select
+                        class="select"
+                        id="country"
+                        name="country"
+                        formControlName="country"
+                        (change)="selectCountry($event)"
+                      >
+                        <option [ngValue]="null" disabled>Country</option>
+                        <option *ngFor="let item of countries" [value]="item.country"
+                          >{{ item.country }} - {{ item.currency }}</option
+                        >
+                      </select>
+
+                      <div *ngIf="submitted && f.country.errors" class="invalid-feedback">
+                        <div *ngIf="f.country.errors.required">Please select the country</div>
+                      </div>
+                    </div>
+
+                    <div class="input bordered" [ngClass]="{ error: submitted && f.card_value.errors }">
+                      <label>What's the value of the card</label>
+                      <input type="number" placeholder="Card Value" formControlName="card_value" />
+
+                      <div *ngIf="submitted && f.card_value.errors" class="invalid-feedback">
+                        <div *ngIf="f.card_value.errors.required">Please enter the value for the card</div>
+                      </div>
+                    </div>
+
+                    <div class="mb-5" *ngIf="!notFound && !disabledMessage">
+                      <p class="text-center text-danger">Rate does not exist for this amount!</p>
+                    </div>
+
+                    <div class="mb-5" *ngIf="notFound && disabledMessage">
+                      <p class="text-center text-danger">{{ disabledMessage }}</p>
+                    </div>
+
+                    <div>
+                      <div style="margin-bottom: 3px;">
+                        Rate:
+                        <span style="font-weight: bolder;">{{ computedRate | currency: '₦ ' }}</span>
+                      </div>
+
+                      <div style="margin-bottom: 3px; font-size: 18px;">
+                        Payout:
+                        <span style="font-weight: bolder;">{{ getAmount() | currency: '₦ ' }}</span>
+                      </div>
+
+                      <!-- <button type="submit" class="btn btn-primary_" [disabled]="submitting">Confirm & Proceed</button> -->
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+                  <img src="assets/images/relax.png" alt="relax" />
+                  <h4 class="text-center">Coming Soon</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card-wrap">
+            <div class="header-top">
+              <img src="assets/images/png/rate-calculator.png" width="50px" alt="calculator" />
+
+              <div class="ml-3">
+                <h4>Get Card Rate</h4>
+                <p>Search and get the rate of any asset/card</p>
+              </div>
+            </div>
+
+            <div style="margin-top: 40px;">
+              <h5 class="text-center">Gift Card Category</h5>
+              <hr />
+
+              <form [formGroup]="rateForm" role="form" class="mt-4">
+                <div class="input bordered">
+                  <label>Select a gift card category</label>
+                  <select class="select" id="card" name="card" formControlName="card" (change)="selectCard($event)">
+                    <option [ngValue]="null" disabled>Gift Card Category</option>
+                    <option *ngFor="let item of allCards" [value]="item | json">{{ item.name }}</option>
+                  </select>
+                </div>
+
+                <div class="input bordered">
+                  <label>Select Rate & Type</label>
+                  <select class="select" id="card" name="card" formControlName="card" (change)="selectRate($event)">
+                    <option [ngValue]="null" disabled>Rate & Type</option>
+                    <option *ngFor="let item of card.rates" [value]="item | json"
+                      >{{ item.country }} ({{ item.currency }}) - {{ card.name }} - {{ item.cardType }} -
+                      {{ item.denomination }}
+                    </option>
+                  </select>
+                </div>
+
+                <div class="d-flex justify-content-between align-items center">
+                  <button type="submit" class="btn btn-primary_" (click)="viewRateDetails()">View Rate Details</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Rate Details -->
+  <div
+    class="modal fade"
+    id="rateDetailsModal"
+    tabindex="-1"
+    aria-labelledby="rateDetailsModalLabel"
+    aria-hidden="true"
+  >
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="rateDetailsModalLabel">Selected Rate</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <div class="text-center">
+            <img src="{{ card.image }}" class="img-fluid" width="150px" alt="{{ card.name }}" />
+          </div>
+
+          <div style="margin-top: 40px;">
+            <h4 style="margin-bottom: 2px;">Details</h4>
+            <hr />
+          </div>
+
+          <div class="mt-3">
+            <div class="lined-detail">
+              <p>Asset:</p>
+              <p>{{ card.name }}</p>
+            </div>
+
+            <div class="lined-detail">
+              <p>Card Type:</p>
+              <p>{{ selectedRate.cardType }}</p>
+            </div>
+
+            <div class="lined-detail">
+              <p>Country:</p>
+              <p>{{ selectedRate.country }}</p>
+            </div>
+
+            <div class="lined-detail">
+              <p>Denomination:</p>
+              <p>{{ selectedRate.denomination }}</p>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <h4>Rate = {{ selectedRate.rate | currency: '₦ ' }} / USD</h4>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <form [formGroup]="rateForm" role="form">
+                <div class="input bordered" [ngClass]="{ error: submitted && r.amount.errors }">
+                  <input type="number" placeholder="Amount in USD" formControlName="amount" />
+
+                  <div *ngIf="submitted && r.amount.errors" class="invalid-feedback">
+                    <div *ngIf="r.amount.errors.required">Please enter the value for the card</div>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <div style="margin-top: 20px" *ngIf="r.amount.value">
+              <div style="margin-top: 20px;">
+                <h4>= {{ r.amount.value * selectedRate.rate | currency: '₦ ' }}</h4>
+                <small>Amount calculated based on rate.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

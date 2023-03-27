@@ -1,0 +1,25 @@
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import './../../../variables.scss';
+
+.top-holder {
+  position: relative;
+  background-color: #124990;
+  color: white;
+  padding: 5px 0px;
+
+  .holder {
+    display: flex;
+    justify-content: flex-end;
+
+    @include mobile {
+      display: block;
+      text-align: right;
+    }
+  }
+
+  p {
+    color: white;
+    margin-right: 30px;
+  }
+}

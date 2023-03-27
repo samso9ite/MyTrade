@@ -1,0 +1,82 @@
+<div class="users">
+  <nav id="sidebar" [ngClass]="{ show: showMenu }">
+    <div class="logo" [routerLink]="['/']" style="cursor: pointer;" routerLinkActive="router-link-active">
+      <img src="assets/images/logo/logo.png" />
+    </div>
+
+    <div class="container">
+      <section class="sidebar-header" *ngIf="!isMobile">
+        <div *ngIf="!userInfo.image" class="avatar" style="background: url('assets/img/svg/user-avatar.svg');">
+          <span class="settings_tag">
+            <a routerLink="/dashboard/settings">
+              <ion-icon src="assets/img/svg/settings-icon.svg"></ion-icon>
+            </a>
+          </span>
+        </div>
+
+        <div *ngIf="userInfo.image" class="avatar" style="background: url('{{ userInfo.image }}');">
+          <span class="settings_tag">
+            <a routerLink="/dashboard/settings">
+              <ion-icon src="assets/img/svg/settings-icon.svg"></ion-icon>
+            </a>
+          </span>
+        </div>
+
+        <div>
+          <p>
+            {{ userInfo.fullname }} <small>{{ userInfo.email }}</small>
+          </p>
+        </div>
+      </section>
+
+      <section class="sidebar-content" style="overflow-y: scroll;">
+        <ul>
+          <li>
+            <a routerLink="/dashboard" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+              <i class="icon">
+                <img src="assets/img/svg/dashboard-icon.svg" alt="" />
+              </i>
+              <span>Dashboard</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="/dashboard/transactions" routerLinkActive="active">
+              <i class="icon">
+                <img src="assets/img/svg/bill-pay-icon.svg" alt="" />
+              </i>
+              <span>All Transactions</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="/dashboard/rates" routerLinkActive="active">
+              <i class="icon">
+                <img src="assets/img/svg/side-settings.svg" alt="" />
+              </i>
+              <span>Rates</span>
+            </a>
+          </li>
+
+          <li>
+            <a routerLink="/dashboard/gift-cards" routerLinkActive="active">
+              <i class="icon">
+                <img src="assets/img/svg/hover-gift-card.svg" alt="" />
+              </i>
+              <span>Redeem Cards</span>
+            </a>
+          </li>
+
+          <li>
+            <a (click)="logout()">
+              <i class="icon">
+                <img src="assets/img/svg/power-icon.svg" alt="" />
+              </i>
+              <span>Logout</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+    </div>
+  </nav>
+</div>

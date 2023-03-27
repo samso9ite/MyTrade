@@ -1,0 +1,349 @@
+<app-loader *ngIf="loading"></app-loader>
+<main class="users">
+    <app-sidebar [showMenu]="valueFromHeader"></app-sidebar>
+    <div class="wrapper" [ngClass]="{ full: valueFromHeader }">
+        <app-header (outputToParent)="getValue($event)"></app-header>
+        <div class="content">
+            <app-page-title></app-page-title>
+            <section class="settings">
+                <div class="nav-selection">
+                    <a class="item" *ngFor="let item of navItem; let i = index" (click)="onSelect(item)"
+                        [ngClass]="{ active: item.id === selectedNavItem, indexActive: item.id === showFirst }">
+                        <strong>{{ item.item }}</strong>
+                    </a>
+                </div>
+                
+                <div class="settings-content">
+                    <div class="settings-item" *ngIf="selectedNavItem === 1 || showFirst">
+                        <form [formGroup]="profileForm" (ngSubmit)="updateProfile(profileUpdate)">
+                            <div class="form-wrap">
+                                <div *ngIf="!userInfo.image.length" class="avatar" style="background: url('assets/img/svg/user-avatar.svg');">
+                                    <!-- <div class="icon"><i class="fas fa-pencil-alt"></i></div> -->
+                                </div>
+
+                                <img *ngIf="userInfo.image.length" src="{{userInfo.image}}" alt="avatar" class="img-thumbnail rounded mx-auto d-block mb-2" style="height: 200px; width: 200px;">
+
+                                <div class="customClass" style="margin-bottom: 40px;">
+                                    <image-upload [clearButtonCaption]="'Delete'" [extensions]="['jpg','png']" [url]="'https://api.imgur.com/3/image'"
+                                        [maxFileSize]="1048576" [headers]="{Authorization: 'Client-ID 96a699465410ec7'}"
+                                        (uploadFinished)="onUploadFinished($event)" [max]="1" [preview]="false" [buttonCaption]="'Upload Image'" (uploadStateChanged)="onUploadStateChanged($event)">
+                                    </image-upload>
+                                </div>
+
+                                <h6>Personal Information</h6>
+
+                                <hr>
+
+                                <div class="input bordered" [ngClass]="{ error: submitted && f.fullname.errors }">
+                                    <label>Full Name</label>
+                                    <input type="text" placeholder="Tell us your full name" formControlName="fullname"
+                                        (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+                                        <div *ngIf="f.fullname.errors.required">Your full name is required</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="input bordered" [ngClass]="{ error: submitted && f.email.errors }">
+                                    <label>Email address</label>
+                                    <input type="email" placeholder="Email address" formControlName="email"
+                                        (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                                        <div *ngIf="f.email.errors.required">Your email address is required</div>
+                                        <div *ngIf="f.email.errors.email">Please enter a valid email address</div>
+                                    </div>
+                                </div>
+
+                                <!-- <div class="input bordered" [ngClass]="{ error: submitted && f.address.errors }">
+                                    <label>Address</label>
+                                    <textarea row="2" formControlName="address" (focus)="onFocus()"></textarea>
+
+                                    <div *ngIf="submitted && f.address.errors" class="invalid-feedback">
+                                        <div *ngIf="f.address.errors.required">Your address is required</div>
+                                    </div>
+                                </div> -->
+
+                                <div class="d-flex justify-content-between align-items center">
+                                    <button type="submit" class="btn btn-primary_"
+                                        [disabled]="submitting">Update</button>
+                                    <!-- <button type="button" class="btn btn-outline_ red">Cancel</button> -->
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="settings-item" *ngIf="selectedNavItem === 2">
+                        <div class="all_cards">
+                            <div class="d-flex justify-content-between align-items-center head">
+                                <h3>My Bank Accounts</h3>
+                                <ion-icon name="add-circle" (click)="openModalWithClass(newCard)"></ion-icon>
+                            </div>
+
+                            <div class="list-cards">
+                                <div *ngIf="!userInfo.accountInfo.length">
+                                    <img class="img-fluid" src="assets/img/png/Savings.png" alt="Not found image" />
+
+                                    <div class="text-center">
+                                        <h3 style="font-weight: 900;">No Bank Accounts</h3>
+                                        <span>Link your bank account, to enable you to receive your money </span>
+
+                                        <button type="submit" class="btn btn-primary_ mt-5" (click)="openModalWithClass(newCard)">Add Bank Account</button>
+                                    </div>
+                                </div>
+
+                                <div *ngIf="userInfo.accountInfo.length" class="d-flex justify-content-between align-items-center head">
+                                    <div class="item" style="cursor: pointer;" [ngClass]="{selected: item.active}" *ngFor="let item of userInfo.accountInfo" (click)="selectAccountAsActive(item)">
+                                        <div class="d-flex justify-content-between align-items-centers">
+                                            <div class="mt-1">
+                                                <p style="font-weight: lighter; font-size: 15px; word-wrap: break-word;">{{item.name}}</p>
+
+                                                <h3>{{item.bank_name}}</h3>
+
+                                                <p style="color: grey; font-weight: bold">{{item.number}}</p>
+                                            </div>
+
+                                            <ion-icon name="trash-outline" style="color: red; margin-top: 5px;" (click)="deleteAccount(item, deleteCard); $event.stopPropagation();">
+                                            </ion-icon>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-item" *ngIf="selectedNavItem === 3">
+                        <form [formGroup]="changePasswordForm" (ngSubmit)="changePassword()">
+                            <div class="form-wrap">
+                                <div class="input bordered" [ngClass]="{ error: submitted && fp.password.errors }">
+                                    <label>Current Password</label>
+                                    <input type="password" placeholder="* * * * *" class="password"
+                                        formControlName="currentPassword" (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && fp.currentPassword.errors" class="invalid-feedback">
+                                        <div *ngIf="fp.currentPassword.errors.required">Please enter a password</div>
+                                        <div *ngIf="fp.currentPassword.errors.minlength">Password must be at least 8
+                                            characters long</div>
+                                    </div>
+                                </div>
+
+                                <div class="input bordered" [ngClass]="{ error: submitted && fp.password.errors }">
+                                    <label>Password</label>
+                                    <input type="password" placeholder="* * * * *" class="password"
+                                        formControlName="password" (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && fp.password.errors" class="invalid-feedback">
+                                        <div *ngIf="fp.password.errors.required">Please enter a password</div>
+                                        <div *ngIf="fp.password.errors.minlength">Password must be at least 8 characters
+                                            long</div>
+                                    </div>
+                                </div>
+
+                                <div class="input bordered"
+                                    [ngClass]="{ error: submitted && fp.confirmPassword.errors }">
+                                    <label>Confirm Password</label>
+                                    <input type="password" placeholder="* * * * *" class="password"
+                                        formControlName="confirmPassword" (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && fp.confirmPassword.errors" class="invalid-feedback">
+                                        <div *ngIf="fp.confirmPassword.errors.required">Please confirm your password
+                                        </div>
+                                        <div *ngIf="fp.confirmPassword.errors.minlength">Password must be at least 8
+                                            characters long</div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-between align-items center">
+                                    <button type="submit" class="btn btn-primary_"
+                                        [disabled]="submitting">Update</button>
+                                    <button type="button" class="btn btn-outline_ red">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="settings-item" *ngIf="selectedNavItem === 4">
+                        <form [formGroup]="pinForm" (ngSubmit)="updateTransactionPin()">
+                            <div class="form-wrap">
+                                <div class="input bordered" [ngClass]="{ error: submitted && fpin.oldPin.errors }">
+                                    <label>Enter Old Transaction Pin</label>
+                                    <input type="password" placeholder="*   *   *   *   *   * " class="password"
+                                        formControlName="oldPin" (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && fpin.oldPin.errors" class="invalid-feedback">
+                                        <div *ngIf="fpin.oldPin.errors.required">Please enter your transaction pin</div>
+                                        <div *ngIf="fpin.oldPin.errors.minlength">Pin should be 4 characters long</div>
+                                        <div *ngIf="fpin.oldPin.errors.maxlength">Pin should be 4 characters long</div>
+                                    </div>
+                                </div>
+
+                                <div class="input bordered" [ngClass]="{ error: submitted && fpin.pin.errors }">
+                                    <label>Enter Transaction Pin</label>
+                                    <input type="password" placeholder="*   *   *   *   *   * " class="password"
+                                        formControlName="pin" (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && fpin.pin.errors" class="invalid-feedback">
+                                        <div *ngIf="fpin.pin.errors.required">Please enter your transaction pin</div>
+                                        <div *ngIf="fpin.confirmPin.errors.minlength">Pin should be 4 characters long
+                                        </div>
+                                        <div *ngIf="fpin.confirmPin.errors.maxlength">Pin should be 4 characters long
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="input bordered" [ngClass]="{ error: submitted && fpin.confirmPin.errors }">
+                                    <label>Comfirm Transaction Pin</label>
+                                    <input type="password" placeholder="*   *   *   *   *   *" class="password"
+                                        formControlName="confirmPin" (focus)="onFocus()" />
+
+                                    <div *ngIf="submitted && fpin.confirmPin.errors" class="invalid-feedback">
+                                        <div *ngIf="fpin.confirmPin.errors.required">
+                                            Please confirm the transaction pin you entered above
+                                        </div>
+                                        <div *ngIf="fpin.confirmPin.errors.minlength">Pin should be 4 characters long
+                                        </div>
+                                        <div *ngIf="fpin.confirmPin.errors.maxlength">Pin should be 4 characters long
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="action d-flex justify-content-between align-items-center">
+                                    <button type="submit" class="btn btn-primary_">Setup Transaction Pin</button>
+                                    <span (click)="modalRef.hide()">I’ll do this later</span>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="settings-item" *ngIf="selectedNavItem === 5">
+                        <div class="others">
+                            <div class="item d-flex justify-content-between align-items-center">
+                                <div class="left d-flex align-items-center">
+                                    <ion-icon src="assets/img/svg/info-icon.svg"></ion-icon>
+                                    <p>F.A.Q <span>See frequently asked question online</span></p>
+                                </div>
+                                <a href="/faqs">
+                                    <ion-icon src="assets/img/svg/link-icon.svg"></ion-icon>
+                                </a>
+                            </div>
+
+                            <div class="item d-flex justify-content-between align-items-center">
+                                <div class="left d-flex align-items-center">
+                                    <ion-icon src="assets/img/svg/privacy-policy-icon.svg"></ion-icon>
+                                    <p>Privacy Policy<span>View our privacy policy for mytrade</span></p>
+                                </div>
+                                <a href="/privacy-policy">
+                                    <ion-icon src="assets/img/svg/link-icon.svg"></ion-icon>
+                                </a>
+                            </div>
+
+                            <div class="item d-flex justify-content-between align-items-center">
+                                <div class="left d-flex align-items-center">
+                                    <ion-icon src="assets/img/svg/privacy-policy-icon.svg"></ion-icon>
+                                    <p>Terms & Condition<span>View our Terms & Conditions</span></p>
+                                </div>
+                                <a href="/terms">
+                                    <ion-icon src="assets/img/svg/link-icon.svg"></ion-icon>
+                                </a>
+                            </div>
+
+                            <div class="item d-flex justify-content-between align-items-center">
+                                <div class="left d-flex align-items-center">
+                                    <ion-icon src="assets/img/svg/message-icon.svg"></ion-icon>
+                                    <p>Ask a question<span>Contact our customer service team</span></p>
+                                </div>
+                                <a>
+                                    <ion-icon src="assets/img/svg/link-icon.svg"></ion-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <ng-template #profileUpdate>
+        <div class="modal-body">
+            <div class="bloc">
+                <div class="success animate__animated animate__fadeInDown">
+                    <img src="assets/img/png/success.png" alt="" />
+                    <p>Profile Updated Sucessfully <span>Your Profile has been updated sucessfully</span></p>
+                    <button class="btn btn-primary_" (click)="modalRef.hide()">Continue</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #newCard>
+        <div class="modal-body">
+            <div class="bloc">
+                <form role="form" [formGroup]="accountForm" class="animate__animated  animate__fadeIn delay-2m" (ngSubmit)="addAccountInformation()">
+                    <div class="new_card">
+                        <h3>Add New Bank Account</h3>
+
+                        <div class="input bordered">
+                            <label>Select Bank</label>
+                            <select class="select" id="bank" name="bank" formControlName="bank" (change)="getSelectedBank($event)">
+                                <option [ngValue]="null" disabled>Select Bank</option>
+                                <option *ngFor="let item of banks" [value]="item | json">{{ item.name }}</option>
+                            </select>
+
+                            <div *ngIf="submitted && a.bank.errors" class="invalid-feedback">
+                                <div *ngIf="a.bank.errors.required">Please select the your bank</div>
+                            </div>
+                        </div>
+                        
+                        <div class="input bordered" [ngClass]="{ error: submitted && a.number.errors }">
+                            <label>Account Number</label>
+                            <input type="text" formControlName="number" (focus)="onFocus()" (keypress)="keyPress($event)" (keyup)="keyUp($event)" />
+                        
+                            <div *ngIf="submitted && a.number.errors" class="invalid-feedback">
+                                <div *ngIf="a.number.errors.required">Account number is required</div>
+                            </div>
+                        </div>
+                        
+                        <div class="input bordered" *ngIf="accountName">
+                            <label>Account Name</label>
+                            <input type="text" formControlName="name" disabled/>
+                        </div>
+
+                        <div class="action d-flex justify-content-between align-items-center">
+                            <button type="submit" class="btn btn-primary_" (click)="modalRef.hide()">Add Bank Account</button>
+                            <button type="button" class="btn btn-txt red" (click)="modalRef.hide()">Cancel</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </ng-template>
+
+    <ng-template #deleteCard>
+        <div class="modal-body">
+            <div class="bloc">
+                <form>
+                    <div class="delete_card" [ngClass]="{ show: !done }">
+                        <h3>Delete this Account ?</h3>
+                        <p>Are you sure you want to delete this account?</p>
+                        <div class="action d-flex justify-content-between align-items-center">
+                            <button type="button" class="btn btn-primary_" (click)="deleteUserAccount()">Delete
+                                Account</button>
+                            <button type="button" class="btn btn-txt red" (click)="modalRef.hide()">No, i don’t</button>
+                        </div>
+                    </div>
+                </form>
+
+                <div class="success animate__animated animate__fadeInDown" [ngClass]="{ show: done }">
+                    <img src="assets/img/png/success.png" alt="" />
+                    <p>
+                        Debit Card Deleted
+                        <span>You debit card has been deleted sucessfully from your account , you can add more cards
+                            later</span>
+                    </p>
+                    <button class="btn btn-primary_" (click)="reload()">Continue</button>
+                </div>
+            </div>
+        </div>
+    </ng-template>
+</main>

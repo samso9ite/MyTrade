@@ -1,0 +1,195 @@
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import 'src/scss/mixins/_selections.scss';
+.users {
+  .wrapper {
+    position: relative;
+    z-index: 10;
+    left: 282px;
+    width: calc(100% - 282px);
+    min-height: 100vh;
+    padding: 0;
+    transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    &.full {
+      left: 0;
+      width: 100%;
+    }
+    .content {
+      padding: 8em 3em 3em;
+      position: relative;
+      .card_transaction {
+        width: 900px;
+        margin: 2em auto 0em;
+        position: relative;
+        @include esusu-header;
+        .form-wrap {
+          width: 687px;
+          padding: 2em 3em;
+          background: #fcfcfc;
+          border-radius: 8px;
+          @include source-selection;
+          .left {
+            margin-right: 1em;
+          }
+          aside {
+            label {
+              color: #03293d;
+              font-size: 14px;
+              @include medium-font;
+            }
+            .customers {
+              margin: 1em 0em 2em;
+              .item {
+                width: 280px;
+                height: 92px;
+                padding: 1em;
+                position: relative;
+                ion-icon {
+                  filter: brightness(1);
+                  position: absolute;
+                  top: 0.5em;
+                  right: 1em;
+                  margin: 0em;
+                  display: none;
+                }
+                .icon {
+                  width: 41px;
+                  height: 41px;
+                  background-size: cover !important;
+                  background-repeat: no-repeat !important;
+                  background-position: 50% !important;
+                  border-radius: 50%;
+                  margin-right: 1em;
+                }
+                p {
+                  @include medium-font;
+                  margin-bottom: 0em;
+                  font-size: 14px;
+                  width: 69%;
+                  span {
+                    display: block;
+                    @include regular-font;
+                    font-size: 12px;
+                  }
+                }
+                &.select {
+                  ion-icon {
+                    display: block;
+                  }
+                }
+              }
+            }
+          }
+          .action {
+            margin-top: 2em;
+          }
+          .user-account {
+            background: $white;
+            border: 1px solid rgba(151, 151, 151, 0.250113);
+            box-shadow: 0px 8px 10px rgba(0, 0, 0, 0.14);
+            border-radius: 3px;
+            padding: 1em 2em;
+            margin: 2em 0em;
+            position: relative;
+            &:before {
+              content: '';
+              position: absolute;
+              top: 0em;
+              height: 4px;
+              width: 100%;
+              left: 0;
+              right: 0;
+              background: $yellow;
+              border-radius: 3px 3px 0px 0px;
+            }
+            p {
+              @include medium-font;
+              font-size: 17px;
+              margin-bottom: 0em;
+              font-weight: 600;
+              span {
+                display: block;
+                @include regular-font;
+                font-size: 15px;
+              }
+            }
+            .provider {
+              background-repeat: no-repeat !important;
+              background-size: cover !important;
+              background-position: center !important;
+              width: 41px;
+              height: 41px;
+              border-radius: 50%;
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+      .content {
+        padding: 6em 1em 2em;
+        .card_transaction {
+          width: auto;
+          .form-wrap {
+            width: auto;
+            padding: 4em 1em;
+            .left {
+              margin-right: 0em;
+            }
+            aside .customers {
+              flex-direction: column;
+              .item {
+                width: -webkit-fill-available;
+                &:first-child {
+                  margin-bottom: 1em;
+                }
+              }
+            }
+            // .mb_flex {
+            //   flex-direction: column;
+            // }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 991px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+      .content {
+        .airtime_data {
+          width: auto;
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 1680px) {
+    .wrapper .content {
+      padding: 8em 6em 0em;
+      .airtime_data {
+        width: 1000px;
+      }
+    }
+  }
+}

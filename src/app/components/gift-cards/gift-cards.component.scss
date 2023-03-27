@@ -1,0 +1,91 @@
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import 'src/scss/mixins/_selections.scss';
+@import 'src/variables.scss';
+
+.users {
+  .wrapper {
+    position: relative;
+    z-index: 10;
+    left: 282px;
+    width: calc(100% - 282px);
+    min-height: 100vh;
+    padding: 0;
+    transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    &.full {
+      left: 0;
+      width: 100%;
+    }
+    .content {
+      padding: 10em 3em 3em;
+      position: relative;
+
+      .cards {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        flex-wrap: wrap;
+
+        .gift-card {
+          background-color: white;
+          border-radius: 4px;
+          box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
+            0px 1px 3px 0px rgba(0, 0, 0, 0.12);
+          transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+          width: 180px;
+          height: 120px;
+          text-align: center;
+          margin: 5px 10px;
+          cursor: pointer;
+
+          img {
+            width: 100%;
+            height: 100%;
+          }
+
+          @include mobile {
+            width: 150px;
+            margin: 10px 5px;
+            height: 100px;
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+      .content {
+        padding: 10em 1em 2em;
+      }
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 991px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+    }
+  }
+  @media screen and (min-width: 1680px) {
+    .wrapper .content {
+      padding: 8em 6em 0em;
+    }
+  }
+}

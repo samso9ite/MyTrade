@@ -1,0 +1,45 @@
+<div class="users">
+  <header>
+    <app-top-info></app-top-info>
+    <div class="wrap">
+      <div class="menu_trigger" (click)="triggerMenu()"><img src="assets/img/svg/hamburg_.svg" /></div>
+      &nbsp;
+      <div class="actions" style="justify-content: flex-end;">
+        <!-- <div (click)="openNotification()"><img src="assets/img/svg/notification-icon.svg" /></div> -->
+        <div>
+          <a routerLink="/dashboard/settings"><img src="assets/img/svg/settings-icon.svg"/></a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="overlay" [ngClass]="{ display: showNotification }">
+    <div
+      class="close_ animate__animated animate__fadeIn delay-2m"
+      (click)="openNotification()"
+      [ngClass]="{ hide: !showNotification }"
+    >
+      <ion-icon src="assets/img/svg/x.svg"></ion-icon> <span>Close</span>
+    </div>
+    <div class="notification">
+      <div class="title d-flex justify-content-between align-items-center">
+        <h3 class="animate__animated animate__fadeIn delay-2m">Notifications</h3>
+        <div class="mb_close" (click)="openNotification()">
+          <ion-icon src="assets/img/svg/x.svg"></ion-icon>
+        </div>
+      </div>
+      <ul>
+        <li
+          [ngClass]="{ 'animate__animated animate__fadeInUp delay-2m': showNotification }"
+          *ngFor="let item of notifications"
+        >
+          <div class="d-flex align-items-center">
+            <div class="icon"><img src="assets/img/svg/notif_bell_icon.svg" /></div>
+            <p>{{ item.message }}</p>
+          </div>
+          <label class="t_stamp">{{ getFormattedDate(item.createdDate) }}</label>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>

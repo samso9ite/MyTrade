@@ -1,0 +1,305 @@
+@import 'src/scss/modules/_vars.scss';
+@import 'src/scss/modules/_typography.scss';
+@import 'src/scss/mixins/_selections.scss';
+.users {
+  .wrapper {
+    position: relative;
+    z-index: 10;
+    left: 282px;
+    width: calc(100% - 282px);
+    min-height: 100vh;
+    padding: 0;
+    transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+    &.full {
+      left: 0;
+      width: 100%;
+    }
+    .content {
+      padding: 8em 3em 3em;
+      position: relative;
+      .settings {
+        position: relative;
+        .nav-selection {
+          padding-top: 2em;
+          display: flex;
+          align-items: center;
+          border-bottom: 1px solid #e7e7e7;
+          .item {
+            position: relative;
+            padding-bottom: 1em;
+            margin-right: 4em;
+            text-decoration: none;
+            cursor: pointer;
+            &:last-child::before {
+              display: none;
+            }
+            strong {
+              color: rgba($black, 0.5);
+              font-size: 16px;
+              @include medium-font;
+              span {
+                font-size: 12px;
+              }
+            }
+
+            &.active,
+            &.indexActive {
+              strong {
+                color: $yellow;
+              }
+              &:after {
+                content: '';
+                position: absolute;
+                left: 0px;
+                bottom: 0%;
+                width: 100%;
+                height: 4px;
+                background: $yellow;
+                border-radius: 20px;
+                transition: 0.5s ease-in;
+              }
+            }
+          }
+        }
+        .settings-content {
+          padding: 2em 2em 3em;
+          background: $white;
+          border-radius: 5px;
+          margin-top: 3em;
+          min-height: 400px;
+          .settings-item {
+            .form-wrap {
+              width: 440px;
+              margin: 0 auto;
+              padding: 3em 0em;
+              .avatar {
+                width: 100px;
+                height: 100px;
+                background-repeat: no-repeat !important;
+                background-size: cover !important;
+                background-position: center !important;
+                margin: -2em auto 3em;
+                position: relative;
+                .icon {
+                  width: 27px;
+                  height: 27px;
+                  border-radius: 50%;
+                  background: #f47500;
+                  display: flex;
+                  justify-content: center;
+                  align-items: center;
+                  position: absolute;
+                  bottom: 0;
+                  right: 0;
+                  z-index: 2;
+                  cursor: pointer;
+                  i {
+                    font-size: 12px;
+                    color: white;
+                  }
+                }
+              }
+            }
+            .all_cards {
+              width: 570px;
+              margin: 0 auto;
+              padding: 8em 0em;
+              .head {
+                h3 {
+                  font-size: 20px;
+                  @include medium-font;
+                  color: $black;
+                }
+                ion-icon {
+                  font-size: 40px;
+                  color: $yellow;
+                  cursor: pointer;
+                }
+              }
+              .list-cards {
+                margin: 2em 0em;
+                .item {
+                  width: 48%;
+                  height: 150px;
+                  padding: 1em 1em;
+                  position: relative;
+                  // background: linear-gradient(360deg, #e2574c -44.29%, #f4b459 136.25%);
+                  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.15);
+                  border-radius: 5px;
+                  .d-flex {
+                    &:first-child {
+                      ion-icon {
+                        font-size: 20px;
+                        color: $white;
+                        cursor: pointer;
+                      }
+                    }
+                    &:nth-child(2) {
+                      position: relative;
+                      top: 4em;
+                      padding: 0em 3em 0em 0em;
+                      label {
+                        margin: 0;
+                        font-size: 23px;
+                        color: #fff;
+                      }
+                    }
+                    &:nth-child(3) {
+                      position: relative;
+                      top: 6.5em;
+                      label {
+                        color: rgba($white, 0.7);
+                        font-size: 14px;
+                        margin: 0em;
+                        @include bold-font;
+                        span {
+                          margin-right: 1em;
+                        }
+                      }
+                    }
+                  }
+                }
+
+                .selected {
+                  background-color: #05a84e;
+                  background-image: url('./../../../assets/images/backgrounds/background.png');
+                  background-position: center;
+                  background-repeat: no-repeat;
+                  background-size: contain;
+                  color: white !important;
+
+                  h3,
+                  p {
+                    color: white !important;
+                  }
+                }
+              }
+              @include pagination_;
+            }
+            .others {
+              width: 550px;
+              margin: 0 auto;
+              padding: 3em 0em;
+              ion-icon {
+                font-size: 18px;
+              }
+              .item {
+                margin-bottom: 2em;
+                &:last-child {
+                  margin-bottom: 0em;
+                }
+                .left {
+                  ion-icon {
+                    margin-right: 1.5em;
+                  }
+                  p {
+                    margin: 0;
+                    color: $black;
+                    @include medium-font;
+                    span {
+                      display: block;
+                      color: rgba($black, 0.4);
+                      @include regular-font;
+                    }
+                  }
+                }
+                a {
+                  cursor: pointer;
+                  text-decoration: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 320px) and (max-width: 767px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+      .content {
+        padding: 6em 1em 2em;
+        ::-webkit-scrollbar {
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+          overflow: hidden;
+        }
+        .settings {
+          .nav-selection {
+            flex-wrap: nowrap;
+            overflow: hidden;
+            overflow-x: scroll;
+            white-space: nowrap;
+            position: relative;
+            padding: 1em 0em;
+            .item {
+              padding: 0em 0em 0em;
+              margin-right: 2em;
+              display: flex;
+              &.active,
+              &.indexActive {
+                &:after {
+                  bottom: -0.5em;
+                }
+              }
+            }
+          }
+          .settings-content {
+            padding: 2em 1em 3em;
+            .settings-item {
+              .form-wrap {
+                width: auto;
+              }
+              .all_cards {
+                width: auto;
+                .list-cards .item {
+                  height: 280px;
+                  padding: 2em 1em;
+                  .d-flex {
+                    &:nth-child(2) {
+                      padding: 0em 2em 0em 0em;
+                      img {
+                        width: 153px;
+                      }
+                    }
+                  }
+                }
+              }
+              .others {
+                width: auto;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  @media screen and (min-width: 768px) and (max-width: 991px) {
+    overflow: hidden;
+    .wrapper {
+      z-index: 10;
+      left: 0;
+      width: 100%;
+      transition: all 400ms cubic-bezier(0.075, 0.82, 0.165, 1);
+      overflow-x: hidden;
+      &.full {
+        left: 280px;
+        overflow: hidden;
+      }
+    }
+  }
+  @media screen and (min-width: 1680px) {
+    .wrapper .content {
+      padding: 8em 6em 3em;
+    }
+  }
+}

@@ -1,0 +1,18 @@
+<main class="users">
+    <app-sidebar [showMenu]="valueFromHeader"></app-sidebar>
+    <div class="wrapper" [ngClass]="{ full: valueFromHeader }">
+        <app-header (outputToParent)="getValue($event)"></app-header>
+        <div class="content">
+            <div class="title">
+                <h3>Sell Gift Cards</h3>
+                <p>Click/Select the giftcard you want to sell</p>
+            </div>
+
+            <div class="cards">
+                <div *ngFor="let item of cards" class="gift-card" (click)="gotoGiftCardPurchase(item._id, item.name)">
+                    <img src={{item.image}} class="img-fluid" alt="gift">
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

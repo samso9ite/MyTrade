@@ -1,0 +1,59 @@
+.btn {
+  font-size: 14px;
+  padding: 0.375rem 1.75rem;
+
+  &.btn-primary_ {
+    border-radius: 5px;
+    background: $yellow;
+    font-size: 14px;
+    color: $black;
+    border: 1px solid rgba(26, 12, 47, 0.1);
+    align-items: center;
+    display: inline-flex;
+    font-weight: 500;
+    padding-left: 2em;
+    padding-right: 2em;
+    position: relative;
+    height: 45px;
+    @include medium-font;
+    &:hover {
+      transition: 0.5s ease-in-out;
+      color: $black;
+      background: rgba($yellow, 0.9);
+    }
+    &:active,
+    &:focus {
+      outline: none !important;
+      box-shadow: none;
+      color: $black;
+      background: rgba($yellow, 0.9);
+    }
+  }
+  &.btn-outline_ {
+    border-radius: 5px;
+    background: $white;
+    font-size: 14px;
+    align-items: center;
+    display: inline-flex;
+    font-weight: 500;
+    padding-left: 2em;
+    padding-right: 2em;
+    position: relative;
+    height: 45px;
+    @include medium-font;
+    &:active,
+    &:focus {
+      outline: none !important;
+      box-shadow: none;
+      background: $white;
+    }
+    &.red {
+      border: 1px solid $soft-red;
+      color: $soft-red;
+    }
+    &.yellow {
+      border: 1px solid $yellow;
+      color: $black;
+    }
+  }
+}
